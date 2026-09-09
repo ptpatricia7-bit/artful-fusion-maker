@@ -10,15 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CabineRouteImport } from './routes/cabine'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as RoteirizadorRouteImport } from './routes/roteirizador'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CabineRoute = CabineRouteImport.update({
+  id: '/cabine',
+  path: '/cabine',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EntrarRoute = EntrarRouteImport.update({
@@ -46,47 +53,85 @@ const PlanosRoute = PlanosRouteImport.update({
   path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoteirizadorRoute = RoteirizadorRouteImport.update({
+  id: '/roteirizador',
+  path: '/roteirizador',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cabine': typeof CabineRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/roteirizador': typeof RoteirizadorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cabine': typeof CabineRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/roteirizador': typeof RoteirizadorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cabine': typeof CabineRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/roteirizador': typeof RoteirizadorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/entrar' | '/estudio' | '/faq' | '/painel' | '/planos'
+  fullPaths:
+    | '/'
+    | '/cabine'
+    | '/entrar'
+    | '/estudio'
+    | '/faq'
+    | '/painel'
+    | '/planos'
+    | '/roteirizador'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/entrar' | '/estudio' | '/faq' | '/painel' | '/planos'
-  id: '__root__' | '/' | '/entrar' | '/estudio' | '/faq' | '/painel' | '/planos'
+  to:
+    | '/'
+    | '/cabine'
+    | '/entrar'
+    | '/estudio'
+    | '/faq'
+    | '/painel'
+    | '/planos'
+    | '/roteirizador'
+  id:
+    | '__root__'
+    | '/'
+    | '/cabine'
+    | '/entrar'
+    | '/estudio'
+    | '/faq'
+    | '/painel'
+    | '/planos'
+    | '/roteirizador'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CabineRoute: typeof CabineRoute
   EntrarRoute: typeof EntrarRoute
   EstudioRoute: typeof EstudioRoute
   FaqRoute: typeof FaqRoute
   PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
+  RoteirizadorRoute: typeof RoteirizadorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -96,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cabine': {
+      id: '/cabine'
+      path: '/cabine'
+      fullPath: '/cabine'
+      preLoaderRoute: typeof CabineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/entrar': {
@@ -133,16 +185,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/roteirizador': {
+      id: '/roteirizador'
+      path: '/roteirizador'
+      fullPath: '/roteirizador'
+      preLoaderRoute: typeof RoteirizadorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CabineRoute: CabineRoute,
   EntrarRoute: EntrarRoute,
   EstudioRoute: EstudioRoute,
   FaqRoute: FaqRoute,
   PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
+  RoteirizadorRoute: RoteirizadorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
