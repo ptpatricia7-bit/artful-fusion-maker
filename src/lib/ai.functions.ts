@@ -61,7 +61,7 @@ export const gerarTexto = createServerFn({ method: "POST" })
     return { texto };
   });
 
-type ProvaInput = { pessoa: string; roupa?: string; instrucao: string };
+type ProvaInput = { pessoa: string; roupa?: string | undefined; instrucao: string };
 
 function validarProva(data: unknown): ProvaInput {
   const d = data as Partial<ProvaInput>;
