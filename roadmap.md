@@ -1,15 +1,15 @@
 # T@arte — roadmap
 
-- [x] Design system escuro (neon ciano/rosa) em src/styles.css
-- [x] Landing (hero, multiplicador, etiqueta, vídeos virais, pra quem é, FAQ)
+- [x] Design system escuro (neon ciano/rosa)
+- [x] Landing (hero, multiplicador, etiqueta, vídeos virais, pra quem é, FAQ, arsenal de ferramentas)
 - [x] Planos, FAQ, Entrar
 - [x] Painel: TOP produtos, vídeos virais, criadores, tendências 24h
-- [x] Estúdio: Multiplicador de Vídeos + roteiro de vídeo e live (offline)
-- [ ] Roteirizador de vídeo com IA real (Lovable AI)
-- [ ] Produtos + vídeos por produto (página dedicada)
-- [ ] Cabine de troca de roupas (prova virtual com IA de imagem)
-- [ ] GeraSpy ADS (espião de anúncios com análise por IA)
-- [ ] Página de Criadores (ranking + busca)
-- [ ] Cofre de Prompts (biblioteca + gerar prompt com IA)
-- [ ] Indique e Ganhe (link de indicação, níveis de prêmio)
+- [x] Estúdio: Multiplicador de Vídeos com etiqueta de originalidade
+- [x] Roteirizador de vídeo com IA real (testado, responde)
+- [x] Produtos + vídeos por produto
+- [x] Cabine de troca de roupas (prova virtual com IA de imagem)
+- [x] GeraSpy ADS (biblioteca de anúncios + análise/variações por IA)
+- [x] Página de Criadores (ranking + busca)
+- [x] Cofre de Prompts (biblioteca + criar prompt com IA)
+- [x] Indique e Ganhe (link + níveis)
 - [ ] Login/banco de dados reais (aguardando decisão da usuária)
