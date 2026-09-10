@@ -11,9 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CabineRouteImport } from './routes/cabine'
+import { Route as CofreRouteImport } from './routes/cofre'
+import { Route as CriadoresRouteImport } from './routes/criadores'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as IndiqueRouteImport } from './routes/indique'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as ProdutosRouteImport } from './routes/produtos'
@@ -30,6 +33,16 @@ const CabineRoute = CabineRouteImport.update({
   path: '/cabine',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CofreRoute = CofreRouteImport.update({
+  id: '/cofre',
+  path: '/cofre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriadoresRoute = CriadoresRouteImport.update({
+  id: '/criadores',
+  path: '/criadores',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EntrarRoute = EntrarRouteImport.update({
   id: '/entrar',
   path: '/entrar',
@@ -43,6 +56,11 @@ const EstudioRoute = EstudioRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndiqueRoute = IndiqueRouteImport.update({
+  id: '/indique',
+  path: '/indique',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PainelRoute = PainelRouteImport.update({
@@ -74,9 +92,12 @@ const SpyRoute = SpyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cabine': typeof CabineRoute
+  '/cofre': typeof CofreRoute
+  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/produtos': typeof ProdutosRoute
@@ -86,9 +107,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cabine': typeof CabineRoute
+  '/cofre': typeof CofreRoute
+  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/produtos': typeof ProdutosRoute
@@ -99,9 +123,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cabine': typeof CabineRoute
+  '/cofre': typeof CofreRoute
+  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
   '/produtos': typeof ProdutosRoute
@@ -113,9 +140,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cabine'
+    | '/cofre'
+    | '/criadores'
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/indique'
     | '/painel'
     | '/planos'
     | '/produtos'
@@ -125,9 +155,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cabine'
+    | '/cofre'
+    | '/criadores'
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/indique'
     | '/painel'
     | '/planos'
     | '/produtos'
@@ -137,9 +170,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/cabine'
+    | '/cofre'
+    | '/criadores'
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/indique'
     | '/painel'
     | '/planos'
     | '/produtos'
@@ -150,9 +186,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CabineRoute: typeof CabineRoute
+  CofreRoute: typeof CofreRoute
+  CriadoresRoute: typeof CriadoresRoute
   EntrarRoute: typeof EntrarRoute
   EstudioRoute: typeof EstudioRoute
   FaqRoute: typeof FaqRoute
+  IndiqueRoute: typeof IndiqueRoute
   PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
   ProdutosRoute: typeof ProdutosRoute
@@ -176,6 +215,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CabineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cofre': {
+      id: '/cofre'
+      path: '/cofre'
+      fullPath: '/cofre'
+      preLoaderRoute: typeof CofreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criadores': {
+      id: '/criadores'
+      path: '/criadores'
+      fullPath: '/criadores'
+      preLoaderRoute: typeof CriadoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/entrar': {
       id: '/entrar'
       path: '/entrar'
@@ -195,6 +248,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indique': {
+      id: '/indique'
+      path: '/indique'
+      fullPath: '/indique'
+      preLoaderRoute: typeof IndiqueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/painel': {
@@ -238,9 +298,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CabineRoute: CabineRoute,
+  CofreRoute: CofreRoute,
+  CriadoresRoute: CriadoresRoute,
   EntrarRoute: EntrarRoute,
   EstudioRoute: EstudioRoute,
   FaqRoute: FaqRoute,
+  IndiqueRoute: IndiqueRoute,
   PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
   ProdutosRoute: ProdutosRoute,
