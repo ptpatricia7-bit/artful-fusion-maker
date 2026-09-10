@@ -197,7 +197,7 @@ function Cofre() {
                 value={pedido}
                 onChange={(e) => setPedido(e.target.value)}
                 rows={3}
-                placeholder="ex: escrever comentários do tipo \"quanto custa?\" que respondem e vendem"
+                placeholder={'ex: escrever respostas para comentários tipo "quanto custa?" que vendem'}
                 className="mt-1.5 w-full rounded-xl border border-input bg-secondary/40 px-3 py-2 text-sm outline-none focus:border-primary"
               />
               <button
