@@ -11,12 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CabineRouteImport } from './routes/cabine'
+import { Route as CofreRouteImport } from './routes/cofre'
+import { Route as CriadoresRouteImport } from './routes/criadores'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as IndiqueRouteImport } from './routes/indique'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as RoteirizadorRouteImport } from './routes/roteirizador'
+import { Route as SpyRouteImport } from './routes/spy'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -26,6 +31,16 @@ const IndexRoute = IndexRouteImport.update({
 const CabineRoute = CabineRouteImport.update({
   id: '/cabine',
   path: '/cabine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CofreRoute = CofreRouteImport.update({
+  id: '/cofre',
+  path: '/cofre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriadoresRoute = CriadoresRouteImport.update({
+  id: '/criadores',
+  path: '/criadores',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EntrarRoute = EntrarRouteImport.update({
@@ -43,6 +58,11 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndiqueRoute = IndiqueRouteImport.update({
+  id: '/indique',
+  path: '/indique',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PainelRoute = PainelRouteImport.update({
   id: '/painel',
   path: '/painel',
@@ -53,85 +73,130 @@ const PlanosRoute = PlanosRouteImport.update({
   path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProdutosRoute = ProdutosRouteImport.update({
+  id: '/produtos',
+  path: '/produtos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoteirizadorRoute = RoteirizadorRouteImport.update({
   id: '/roteirizador',
   path: '/roteirizador',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpyRoute = SpyRouteImport.update({
+  id: '/spy',
+  path: '/spy',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cabine': typeof CabineRoute
+  '/cofre': typeof CofreRoute
+  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/produtos': typeof ProdutosRoute
   '/roteirizador': typeof RoteirizadorRoute
+  '/spy': typeof SpyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cabine': typeof CabineRoute
+  '/cofre': typeof CofreRoute
+  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/produtos': typeof ProdutosRoute
   '/roteirizador': typeof RoteirizadorRoute
+  '/spy': typeof SpyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cabine': typeof CabineRoute
+  '/cofre': typeof CofreRoute
+  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/produtos': typeof ProdutosRoute
   '/roteirizador': typeof RoteirizadorRoute
+  '/spy': typeof SpyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/cabine'
+    | '/cofre'
+    | '/criadores'
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/indique'
     | '/painel'
     | '/planos'
+    | '/produtos'
     | '/roteirizador'
+    | '/spy'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/cabine'
+    | '/cofre'
+    | '/criadores'
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/indique'
     | '/painel'
     | '/planos'
+    | '/produtos'
     | '/roteirizador'
+    | '/spy'
   id:
     | '__root__'
     | '/'
     | '/cabine'
+    | '/cofre'
+    | '/criadores'
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/indique'
     | '/painel'
     | '/planos'
+    | '/produtos'
     | '/roteirizador'
+    | '/spy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CabineRoute: typeof CabineRoute
+  CofreRoute: typeof CofreRoute
+  CriadoresRoute: typeof CriadoresRoute
   EntrarRoute: typeof EntrarRoute
   EstudioRoute: typeof EstudioRoute
   FaqRoute: typeof FaqRoute
+  IndiqueRoute: typeof IndiqueRoute
   PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
+  ProdutosRoute: typeof ProdutosRoute
   RoteirizadorRoute: typeof RoteirizadorRoute
+  SpyRoute: typeof SpyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -148,6 +213,20 @@ declare module '@tanstack/react-router' {
       path: '/cabine'
       fullPath: '/cabine'
       preLoaderRoute: typeof CabineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cofre': {
+      id: '/cofre'
+      path: '/cofre'
+      fullPath: '/cofre'
+      preLoaderRoute: typeof CofreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criadores': {
+      id: '/criadores'
+      path: '/criadores'
+      fullPath: '/criadores'
+      preLoaderRoute: typeof CriadoresRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/entrar': {
@@ -171,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/indique': {
+      id: '/indique'
+      path: '/indique'
+      fullPath: '/indique'
+      preLoaderRoute: typeof IndiqueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/painel': {
       id: '/painel'
       path: '/painel'
@@ -185,11 +271,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/produtos': {
+      id: '/produtos'
+      path: '/produtos'
+      fullPath: '/produtos'
+      preLoaderRoute: typeof ProdutosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/roteirizador': {
       id: '/roteirizador'
       path: '/roteirizador'
       fullPath: '/roteirizador'
       preLoaderRoute: typeof RoteirizadorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/spy': {
+      id: '/spy'
+      path: '/spy'
+      fullPath: '/spy'
+      preLoaderRoute: typeof SpyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -198,12 +298,17 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CabineRoute: CabineRoute,
+  CofreRoute: CofreRoute,
+  CriadoresRoute: CriadoresRoute,
   EntrarRoute: EntrarRoute,
   EstudioRoute: EstudioRoute,
   FaqRoute: FaqRoute,
+  IndiqueRoute: IndiqueRoute,
   PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
+  ProdutosRoute: ProdutosRoute,
   RoteirizadorRoute: RoteirizadorRoute,
+  SpyRoute: SpyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -186,6 +186,37 @@ function Home() {
         </div>
       </section>
 
+      {/* Ferramentas com IA */}
+      <section className="border-b border-border py-20">
+        <div className="mx-auto max-w-6xl px-5">
+          <h2 className="font-display text-3xl font-bold">
+            Um arsenal completo, <span className="text-gradient">com IA integrada</span>
+          </h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { to: "/roteirizador", t: "Roteirizador de vídeo com IA", d: "Gancho, corpo, CTA e legenda prontos pra gravar, do seu jeito." },
+              { to: "/produtos", t: "Produtos e vídeos", d: "Cada produto com faturamento, comissão e os vídeos que vendem ele." },
+              { to: "/cabine", t: "Cabine de troca de roupas", d: "A IA veste a peça na sua foto — grave antes do produto chegar." },
+              { to: "/spy", t: "GeraSpy ADS", d: "Espie os anúncios que mais vendem e a IA cria variações melhores." },
+              { to: "/criadores", t: "Criadores e lojas", d: "Quem mais fatura no TikTok Shop BR, por nicho." },
+              { to: "/cofre", t: "Cofre de Prompts", d: "Prompts prontos e um criador de prompts com IA sob medida." },
+              { to: "/indique", t: "Indique e ganhe", d: "Compartilhe seu link e ganhe meses grátis por amigo." },
+              { to: "/estudio", t: "Multiplicador de Vídeos", d: "18 gravações viram até 150 vídeos com etiqueta de originalidade." },
+              { to: "/painel", t: "Painel diário", d: "Ranking recalculado toda madrugada com as vendas do dia." },
+            ].map((f) => (
+              <Link
+                key={f.to}
+                to={f.to}
+                className="glass block rounded-2xl p-6 transition-colors hover:border-primary/40"
+              >
+                <h3 className="text-base font-semibold">{f.t}</h3>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-muted-foreground">{f.d}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Etiqueta de originalidade */}
       <section className="border-b border-border py-20">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-2 lg:items-center">
