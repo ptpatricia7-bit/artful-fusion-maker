@@ -16,7 +16,9 @@ import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as RoteirizadorRouteImport } from './routes/roteirizador'
+import { Route as SpyRouteImport } from './routes/spy'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,9 +55,19 @@ const PlanosRoute = PlanosRouteImport.update({
   path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProdutosRoute = ProdutosRouteImport.update({
+  id: '/produtos',
+  path: '/produtos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoteirizadorRoute = RoteirizadorRouteImport.update({
   id: '/roteirizador',
   path: '/roteirizador',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpyRoute = SpyRouteImport.update({
+  id: '/spy',
+  path: '/spy',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -67,7 +79,9 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/produtos': typeof ProdutosRoute
   '/roteirizador': typeof RoteirizadorRoute
+  '/spy': typeof SpyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -77,7 +91,9 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/produtos': typeof ProdutosRoute
   '/roteirizador': typeof RoteirizadorRoute
+  '/spy': typeof SpyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -88,7 +104,9 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
+  '/produtos': typeof ProdutosRoute
   '/roteirizador': typeof RoteirizadorRoute
+  '/spy': typeof SpyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -100,7 +118,9 @@ export interface FileRouteTypes {
     | '/faq'
     | '/painel'
     | '/planos'
+    | '/produtos'
     | '/roteirizador'
+    | '/spy'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,7 +130,9 @@ export interface FileRouteTypes {
     | '/faq'
     | '/painel'
     | '/planos'
+    | '/produtos'
     | '/roteirizador'
+    | '/spy'
   id:
     | '__root__'
     | '/'
@@ -120,7 +142,9 @@ export interface FileRouteTypes {
     | '/faq'
     | '/painel'
     | '/planos'
+    | '/produtos'
     | '/roteirizador'
+    | '/spy'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -131,7 +155,9 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
+  ProdutosRoute: typeof ProdutosRoute
   RoteirizadorRoute: typeof RoteirizadorRoute
+  SpyRoute: typeof SpyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -185,11 +211,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/produtos': {
+      id: '/produtos'
+      path: '/produtos'
+      fullPath: '/produtos'
+      preLoaderRoute: typeof ProdutosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/roteirizador': {
       id: '/roteirizador'
       path: '/roteirizador'
       fullPath: '/roteirizador'
       preLoaderRoute: typeof RoteirizadorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/spy': {
+      id: '/spy'
+      path: '/spy'
+      fullPath: '/spy'
+      preLoaderRoute: typeof SpyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -203,7 +243,9 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
+  ProdutosRoute: ProdutosRoute,
   RoteirizadorRoute: RoteirizadorRoute,
+  SpyRoute: SpyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
