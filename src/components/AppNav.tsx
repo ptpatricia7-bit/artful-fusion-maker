@@ -5,6 +5,8 @@ const ferramentas = [
   { to: "/produtos", label: "Produtos e vídeos" },
   { to: "/estudio", label: "Multiplicador" },
   { to: "/roteirizador", label: "Roteirizador IA" },
+  { to: "/video", label: "Gerador de vídeo IA" },
+  { to: "/gravar", label: "Gravar e postar" },
   { to: "/cabine", label: "Cabine de roupas" },
   { to: "/spy", label: "GeraSpy ADS" },
   { to: "/criadores", label: "Criadores" },

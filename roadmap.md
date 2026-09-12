@@ -12,4 +12,6 @@
 - [x] Página de Criadores (ranking + busca)
 - [x] Cofre de Prompts (biblioteca + criar prompt com IA)
 - [x] Indique e Ganhe (link + níveis)
+- [x] Gerador de vídeo com IA (cena ou foto de partida, som, download)
+- [ ] Gravar vídeo do usuário: câmera com o rosto, avatares e compartilhar no WhatsApp/redes
 - [ ] Login/banco de dados reais (aguardando decisão da usuária)
