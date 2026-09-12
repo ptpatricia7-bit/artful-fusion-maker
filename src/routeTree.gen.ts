@@ -16,6 +16,7 @@ import { Route as CriadoresRouteImport } from './routes/criadores'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as GravarRouteImport } from './routes/gravar'
 import { Route as IndiqueRouteImport } from './routes/indique'
 import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PlanosRouteImport } from './routes/planos'
@@ -57,6 +58,11 @@ const EstudioRoute = EstudioRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GravarRoute = GravarRouteImport.update({
+  id: '/gravar',
+  path: '/gravar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndiqueRoute = IndiqueRouteImport.update({
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/gravar': typeof GravarRoute
   '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/gravar': typeof GravarRoute
   '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   '/entrar': typeof EntrarRoute
   '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
+  '/gravar': typeof GravarRoute
   '/indique': typeof IndiqueRoute
   '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/gravar'
     | '/indique'
     | '/painel'
     | '/planos'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/gravar'
     | '/indique'
     | '/painel'
     | '/planos'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/estudio'
     | '/faq'
+    | '/gravar'
     | '/indique'
     | '/painel'
     | '/planos'
@@ -203,6 +215,7 @@ export interface RootRouteChildren {
   EntrarRoute: typeof EntrarRoute
   EstudioRoute: typeof EstudioRoute
   FaqRoute: typeof FaqRoute
+  GravarRoute: typeof GravarRoute
   IndiqueRoute: typeof IndiqueRoute
   PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
@@ -261,6 +274,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gravar': {
+      id: '/gravar'
+      path: '/gravar'
+      fullPath: '/gravar'
+      preLoaderRoute: typeof GravarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/indique': {
@@ -323,6 +343,7 @@ const rootRouteChildren: RootRouteChildren = {
   EntrarRoute: EntrarRoute,
   EstudioRoute: EstudioRoute,
   FaqRoute: FaqRoute,
+  GravarRoute: GravarRoute,
   IndiqueRoute: IndiqueRoute,
   PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
