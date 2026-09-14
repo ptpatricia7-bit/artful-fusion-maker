@@ -7,7 +7,7 @@
 - [x] Estúdio: Multiplicador de Vídeos com etiqueta de originalidade
 - [x] Roteirizador de vídeo com IA real (testado, responde)
 - [x] Produtos + vídeos por produto
-- [x] Cabine de troca de roupas (prova virtual com IA de imagem)
+- [x] Estúdio visual na Cabine: troca de roupas, foto profissional, foto 3D, personagem, produto e restauração
 - [x] GeraSpy ADS (biblioteca de anúncios + análise/variações por IA)
 - [x] Página de Criadores (ranking + busca)
 - [x] Cofre de Prompts (biblioteca + criar prompt com IA)

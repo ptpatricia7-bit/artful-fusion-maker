@@ -61,41 +61,91 @@ export const gerarTexto = createServerFn({ method: "POST" })
     return { texto };
   });
 
-type ProvaInput = { pessoa: string; roupa?: string | undefined; instrucao: string };
+const MODOS_ESTUDIO = [
+  "roupa",
+  "profissional",
+  "tres-d",
+  "personagem",
+  "produto",
+  "restauracao",
+] as const;
 
-function validarProva(data: unknown): ProvaInput {
-  const d = data as Partial<ProvaInput>;
-  if (!d || typeof d.pessoa !== "string" || !d.pessoa.startsWith("data:image/")) {
-    throw new Error("Envie uma foto sua de corpo inteiro.");
+type ModoEstudio = (typeof MODOS_ESTUDIO)[number];
+type EstudioInput = {
+  modo: ModoEstudio;
+  imagem: string;
+  referencia?: string | undefined;
+  instrucao: string;
+};
+
+function validarImagemEstudio(data: unknown): EstudioInput {
+  const d = data as Partial<EstudioInput>;
+  if (!d || typeof d.imagem !== "string" || !d.imagem.startsWith("data:image/")) {
+    throw new Error("Envie a imagem principal para começar.");
   }
-  if (d.pessoa.length > 9_000_000) throw new Error("A foto está muito grande. Use uma menor.");
+  if (d.imagem.length > 9_000_000) throw new Error("A imagem está muito grande. Use uma menor.");
+  const modo = MODOS_ESTUDIO.includes(d.modo as ModoEstudio) ? (d.modo as ModoEstudio) : "roupa";
+  const referencia =
+    typeof d.referencia === "string" && d.referencia.startsWith("data:image/")
+      ? d.referencia
+      : undefined;
+  if (referencia && referencia.length > 9_000_000) {
+    throw new Error("A imagem de referência está muito grande. Use uma menor.");
+  }
   return {
-    pessoa: d.pessoa,
-    roupa:
-      typeof d.roupa === "string" && d.roupa.startsWith("data:image/") ? d.roupa : undefined,
+    modo,
+    imagem: d.imagem,
+    referencia,
     instrucao: typeof d.instrucao === "string" ? d.instrucao.slice(0, 1200) : "",
   };
 }
 
-/** Cabine de troca de roupas: veste a peça na foto enviada. */
-export const provarRoupa = createServerFn({ method: "POST" })
-  .inputValidator(validarProva)
+function criarPromptEstudio(data: EstudioInput) {
+  const complemento = data.instrucao.trim()
+    ? `Ajuste solicitado pela pessoa: ${data.instrucao.trim()}.`
+    : "";
+  const prompts: Record<ModoEstudio, string> = {
+    roupa: data.referencia
+      ? "Faça uma prova virtual. A primeira imagem mostra a pessoa e a segunda mostra a roupa. Vista a pessoa com a peça da referência, preservando exatamente rosto, corpo, pele, cabelo, pose e cenário. Reproduza tecido, cor e detalhes da peça com caimento, dobras e sombras realistas."
+      : "Faça uma prova virtual na pessoa da imagem, trocando apenas a roupa conforme a descrição. Preserve exatamente rosto, corpo, pele, cabelo, pose e cenário. Crie caimento, dobras e sombras realistas.",
+    profissional:
+      "Transforme a imagem principal em um ensaio fotográfico profissional de alta qualidade. Preserve exatamente a identidade, os traços do rosto e a aparência real da pessoa ou objeto. Melhore enquadramento, iluminação de estúdio, nitidez, equilíbrio de cor e acabamento editorial, sem parecer artificial.",
+    "tres-d":
+      "Transforme a imagem principal em uma arte 3D premium, rica em volume, profundidade, materiais, reflexos e iluminação cinematográfica. Preserve a identidade visual, cores e elementos reconhecíveis do original. O resultado deve parecer uma renderização 3D profissional e detalhada.",
+    personagem: data.referencia
+      ? "Transforme a pessoa ou objeto da primeira imagem no personagem mostrado na segunda imagem. Preserve o rosto, a identidade, a pose e a composição principal da primeira imagem, aplicando com fidelidade o figurino, cabelo, acessórios e estilo visual da referência."
+      : "Transforme a pessoa da imagem no personagem descrito. Preserve o rosto, a identidade, a pose e a composição principal, mudando figurino, cabelo, acessórios e atmosfera para representar o personagem com qualidade profissional.",
+    produto: data.referencia
+      ? "Crie uma fotografia publicitária profissional do produto da primeira imagem, usando a segunda imagem como referência de cenário ou estilo. Preserve rigorosamente o formato, a marca, o rótulo, as cores e os detalhes reais do produto. Use iluminação comercial e composição pronta para redes sociais."
+      : "Crie uma fotografia publicitária profissional do produto da imagem. Remova distrações e valorize o produto com iluminação comercial, cenário elegante e composição pronta para redes sociais. Preserve rigorosamente formato, marca, rótulo, cores e detalhes reais.",
+    restauracao:
+      "Restaure cuidadosamente a imagem antiga ou danificada. Remova riscos, manchas, ruído, desbotamento, rasgos e áreas deterioradas; recupere nitidez, contraste e detalhes naturais. Preserve rostos, identidade, roupas, objetos e composição histórica. Não invente elementos nem altere as pessoas.",
+  };
+  return `${prompts[data.modo]} ${complemento}`.trim();
+}
+
+/** Estúdio visual: transforma uma ou duas imagens conforme a ferramenta escolhida. */
+export const gerarImagemEstudio = createServerFn({ method: "POST" })
+  .inputValidator(validarImagemEstudio)
   .handler(async ({ data }) => {
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("A inteligência artificial não está configurada.");
 
-    const imagens = data.roupa ? [data.pessoa, data.roupa] : [data.pessoa];
-    const prompt = data.roupa
-      ? `Prova virtual de roupa. Na primeira imagem está a pessoa; na segunda, a peça de roupa. Vista a pessoa com essa peça mantendo o rosto, o corpo, a pele, o cabelo e o fundo exatamente iguais. Caimento realista, sombras e dobras naturais, foto de moda pronta para vídeo de TikTok Shop. ${data.instrucao}`
-      : `Prova virtual de roupa na pessoa da imagem. Troque a roupa dela por: ${data.instrucao}. Mantenha rosto, corpo, pele, cabelo e fundo exatamente iguais, com caimento realista e sombras naturais.`;
+    const conteudo: unknown[] = [
+      { type: "text", text: criarPromptEstudio(data) },
+      { type: "image_url", image_url: { url: data.imagem } },
+    ];
+    if (data.referencia) {
+      conteudo.push({ type: "image_url", image_url: { url: data.referencia } });
+    }
 
     const res = await fetch(`${GATEWAY}/images/generations`, {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-3-pro-image",
-        prompt,
-        image: imagens.length === 1 ? imagens[0] : imagens,
+        messages: [{ role: "user", content: conteudo }],
+        modalities: ["image", "text"],
       }),
     });
 
@@ -103,7 +153,7 @@ export const provarRoupa = createServerFn({ method: "POST" })
 
     const json = (await res.json()) as { data?: { b64_json?: string }[] };
     const b64 = json.data?.[0]?.b64_json;
-    if (!b64) throw new Error("Não foi possível gerar a prova da roupa. Tente outra foto.");
+    if (!b64) throw new Error("Não foi possível criar a imagem. Tente outra foto ou descrição.");
     return { imagem: `data:image/png;base64,${b64}` };
   });
 
