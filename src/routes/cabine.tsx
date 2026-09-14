@@ -54,7 +54,7 @@ type Ferramenta = {
   Icone: ComponentType<{ className?: string }>;
 };
 
-const ferramentas: Ferramenta[] = [
+const ferramentas = [
   {
     id: "roupa",
     nome: "Troca de roupas",
@@ -124,7 +124,7 @@ const ferramentas: Ferramenta[] = [
     carregando: "Recuperando detalhes e removendo danos…",
     Icone: WandSparkles,
   },
-];
+] as const satisfies readonly Ferramenta[];
 
 function lerArquivo(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
