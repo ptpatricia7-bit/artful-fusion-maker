@@ -5,7 +5,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { AppNav } from "@/components/AppNav";
 import { AiResultado } from "@/components/AiResultado";
 import { gerarTexto } from "@/lib/ai.functions";
-import { produtos } from "@/lib/tarte-data";
 
 export const Route = createFileRoute("/roteirizador")({
   head: () => ({
@@ -33,7 +32,7 @@ const tons = ["Amiga sincera", "Direto e agressivo", "Divertido", "Especialista"
 
 function Roteirizador() {
   const gerar = useServerFn(gerarTexto);
-  const [produtoNome, setProdutoNome] = useState(produtos[0]!.nome);
+  const [produtoNome, setProdutoNome] = useState("");
   const [formato, setFormato] = useState(formatos[0]!);
   const [tom, setTom] = useState(tons[0]!);
   const [publico, setPublico] = useState("mulheres de 25 a 40 anos que compram no TikTok");
@@ -42,9 +41,11 @@ function Roteirizador() {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
-  const produto = produtos.find((p) => p.nome === produtoNome);
-
   const enviar = async () => {
+    if (produtoNome.trim().length < 2) {
+      setErro("Digite o produto ou serviço que deseja divulgar.");
+      return;
+    }
     setCarregando(true);
     setErro(null);
     setTexto(null);
@@ -53,11 +54,7 @@ function Roteirizador() {
         data: {
           sistema:
             "Você escreve roteiros de vídeo para afiliados do TikTok Shop Brasil. Entregue blocos com marcação de tempo, falas prontas para ler, ideias de imagem e legenda com hashtags.",
-          pedido: `Escreva um roteiro no formato "${formato}" para o produto "${produtoNome}"${
-            produto
-              ? ` (preço R$ ${produto.preco.toFixed(2).replace(".", ",")}, nicho ${produto.nicho}, comissão ${produto.comissao}%)`
-              : ""
-          }. Tom de voz: ${tom}. Público: ${publico}. ${extra}
+          pedido: `Escreva um roteiro no formato "${formato}" para divulgar este produto ou serviço: "${produtoNome}". Tom de voz: ${tom}. Público: ${publico}. ${extra}
 Estrutura: 3 opções de gancho (0-3s), corpo com marcação de tempo, quebra de objeção, CTA e legenda com hashtags.`,
         },
       });
@@ -81,18 +78,13 @@ Estrutura: 3 opções de gancho (0-3s), corpo com marcação de tempo, quebra de
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[360px_1fr]">
           <div className="glass rounded-2xl p-5">
-            <label className="text-xs text-muted-foreground">Produto</label>
+            <label className="text-xs text-muted-foreground">Produto ou serviço</label>
             <input
               value={produtoNome}
               onChange={(e) => setProdutoNome(e.target.value)}
-              list="lista-produtos"
+              placeholder="Ex.: limpeza de pele, curso de inglês ou sérum facial"
               className="mt-1.5 w-full rounded-xl border border-input bg-secondary/40 px-3 py-2 text-sm outline-none focus:border-primary"
             />
-            <datalist id="lista-produtos">
-              {produtos.map((p) => (
-                <option key={p.id} value={p.nome} />
-              ))}
-            </datalist>
 
             <label className="mt-4 block text-xs text-muted-foreground">Formato</label>
             <select

@@ -9,7 +9,7 @@ const ferramentas = [
   { to: "/gravar", label: "Gravar e postar" },
   { to: "/cabine", label: "Cabine de roupas" },
   { to: "/spy", label: "GeraSpy ADS" },
-  { to: "/criadores", label: "Criadores" },
+  { to: "/criadores", label: "Criativos" },
   { to: "/cofre", label: "Cofre de prompts" },
   { to: "/indique", label: "Indique e ganhe" },
 ] as const;

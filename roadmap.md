@@ -9,9 +9,13 @@
 - [x] Produtos + vídeos por produto
 - [x] Estúdio visual na Cabine: troca de roupas, foto profissional, foto 3D, personagem, produto e restauração
 - [x] GeraSpy ADS (biblioteca de anúncios + análise/variações por IA)
-- [x] Página de Criadores (ranking + busca)
+- [x] Página de Criativos para redes sociais com texto e imagem por IA
 - [x] Cofre de Prompts (biblioteca + criar prompt com IA)
 - [x] Indique e Ganhe (link + níveis)
 - [x] Gerador de vídeo com IA (cena ou foto de partida, som, download)
 - [x] Gravar vídeo do usuário: câmera com teleprompter, avatares de IA e compartilhar no WhatsApp/redes
 - [ ] Login/banco de dados reais (aguardando decisão da usuária)
+- [x] Multiplicador com vídeos reais: 10 ganchos, 5 corpos, 3 CTAs e 150 combinações
+- [x] Roteiros livres para produto ou serviço, incluindo live
+- [x] Pesquisa assistida de produtos e criadores em TikTok, Instagram e YouTube
+- [x] Nova imagem do Painel
