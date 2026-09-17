@@ -1,22 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { Download, Film, Sparkles, Trash2, Upload } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AppNav } from "@/components/AppNav";
+import { AiResultado } from "@/components/AiResultado";
 import { SiteHeader } from "@/components/SiteHeader";
-import { produtos } from "@/lib/tarte-data";
+import { Button } from "@/components/ui/button";
+import { consultarVideo, criarVideo, gerarTexto } from "@/lib/ai.functions";
+import { baixarBlob, montarVideo, type ClipeLocal } from "@/lib/video-composer";
 
 export const Route = createFileRoute("/estudio")({
   head: () => ({
     meta: [
-      { title: "Estúdio: Multiplicador de Vídeos e roteiros com IA — T@arte" },
-      {
-        name: "description",
-        content:
-          "Monte até 150 vídeos combinando ganchos, corpos e CTAs, com etiqueta de originalidade e a ordem certa de postar.",
-      },
-      { property: "og:title", content: "Estúdio T@arte — Multiplicador de Vídeos" },
-      {
-        property: "og:description",
-        content: "18 gravações viram 150 vídeos prontos, com etiqueta de originalidade.",
-      },
+      { title: "Multiplicador de vídeos e roteiros — T@arte" },
+      { name: "description", content: "Combine 10 ganchos, 5 corpos e 3 CTAs em até 150 vídeos e crie roteiros livres com IA." },
+      { property: "og:title", content: "Multiplicador de vídeos — T@arte" },
+      { property: "og:description", content: "Envie 18 trechos e monte até 150 vídeos prontos para postar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -24,310 +23,187 @@ export const Route = createFileRoute("/estudio")({
   component: Estudio,
 });
 
-const ganchosPadrao = [
-  "Ninguém acredita que isso custa tão pouco",
-  "Testei por 7 dias e olha o resultado",
-  "Para tudo: eu achei o produto do ano",
-  "O erro que todo mundo comete com isso",
-  "Comprei sem esperança e me surpreendi",
-  "Isso aqui esgotou 3 vezes esse mês",
-  "Se você tem esse problema, assiste até o fim",
-  "Minha rotina mudou por causa disso",
-  "Antes e depois de 14 dias usando",
-  "Eu não pagaria mais caro depois de saber isso",
-];
-
-const corposPadrao = [
-  "Mostro o produto de perto, textura e tamanho real",
-  "Explico como usar no dia a dia em 3 passos",
-  "Comparo com o que eu usava antes",
-  "Conto quanto tempo levou pra fazer efeito",
-  "Respondo as 3 dúvidas que mais me perguntam",
-];
-
-const ctasPadrao = [
-  "Tá na sacolinha, corre que o cupom acaba hoje",
-  "Clica no link fixado e garante o seu",
-  "Comenta EU QUERO que eu te mando o link",
-];
-
 type Aba = "multiplicador" | "roteiro" | "live";
+type Categoria = "gancho" | "corpo" | "cta";
+type Resultado = { id: string; nome: string; url: string };
 
-function etiqueta(gi: number, ci: number, ti: number) {
-  const score = (gi * 7 + ci * 3 + ti * 11) % 10;
-  if (score >= 6) return { rotulo: "Original", cor: "text-primary", nota: "poste primeiro" };
-  if (score >= 3)
-    return { rotulo: "Repete um pouco", cor: "text-gold", nota: "diferencie a headline" };
-  return { rotulo: "Bem parecido", cor: "text-accent", nota: "deixe por último" };
+const limites: Record<Categoria, number> = { gancho: 10, corpo: 5, cta: 3 };
+const nomes: Record<Categoria, string> = { gancho: "Ganchos", corpo: "Corpos", cta: "CTAs" };
+
+function arquivosParaClipes(arquivos: FileList | null, atual: ClipeLocal[], limite: number) {
+  if (!arquivos) return atual;
+  return [...atual, ...Array.from(arquivos).map((arquivo) => ({
+    id: crypto.randomUUID(), nome: arquivo.name, arquivo, url: URL.createObjectURL(arquivo),
+  }))].slice(0, limite);
 }
-
-const ordemPeso: Record<string, number> = {
-  Original: 0,
-  "Repete um pouco": 1,
-  "Bem parecido": 2,
-};
 
 function Estudio() {
   const [aba, setAba] = useState<Aba>("multiplicador");
-  const [ganchos, setGanchos] = useState(ganchosPadrao.join("\n"));
-  const [corpos, setCorpos] = useState(corposPadrao.join("\n"));
-  const [ctas, setCtas] = useState(ctasPadrao.join("\n"));
-  const [gerado, setGerado] = useState(false);
-  const [produtoId, setProdutoId] = useState(produtos[0]!.id);
-  const [roteiro, setRoteiro] = useState<string[] | null>(null);
-  const [liveRoteiro, setLiveRoteiro] = useState<string[] | null>(null);
-  const [duracao, setDuracao] = useState(30);
-
-  const listas = useMemo(() => {
-    const clean = (s: string) =>
-      s
-        .split("\n")
-        .map((l) => l.trim())
-        .filter(Boolean);
-    return { g: clean(ganchos), c: clean(corpos), t: clean(ctas) };
-  }, [ganchos, corpos, ctas]);
-
-  const total = listas.g.length * listas.c.length * listas.t.length;
-
-  const combos = useMemo(() => {
-    const out: {
-      id: string;
-      gancho: string;
-      corpo: string;
-      cta: string;
-      rotulo: string;
-      cor: string;
-      nota: string;
-    }[] = [];
-    listas.g.forEach((g, gi) =>
-      listas.c.forEach((c, ci) =>
-        listas.t.forEach((t, ti) => {
-          const e = etiqueta(gi, ci, ti);
-          out.push({
-            id: `${gi}-${ci}-${ti}`,
-            gancho: g,
-            corpo: c,
-            cta: t,
-            rotulo: e.rotulo,
-            cor: e.cor,
-            nota: e.nota,
-          });
-        }),
-      ),
-    );
-    return out.sort((a, b) => ordemPeso[a.rotulo]! - ordemPeso[b.rotulo]!);
-  }, [listas]);
-
-  const produto = produtos.find((p) => p.id === produtoId)!;
-
-  const gerarRoteiro = () => {
-    setRoteiro([
-      `GANCHO (0-3s): "Ninguém acredita que ${produto.nome.toLowerCase()} custa R$ ${produto.preco
-        .toFixed(2)
-        .replace(".", ",")}."`,
-      `PROVA (3-10s): mostre o produto de perto e diga que ${produto.criadores} criadores já estão vendendo ele.`,
-      `BENEFÍCIO (10-20s): conte o problema que ele resolve em 1 frase e o resultado em 1 frase.`,
-      `OBJEÇÃO (20-27s): "e se não funcionar?" — fale do preço baixo e da facilidade de testar.`,
-      `CTA (27-32s): "tá na sacolinha, corre que o cupom acaba hoje".`,
-      `LEGENDA: ${produto.nicho} · #tiktokshop #achadinhos #${produto.nicho.toLowerCase()}`,
-    ]);
-  };
-
-  const gerarLive = () => {
-    const blocos = Math.max(3, Math.round(duracao / 10));
-    setLiveRoteiro([
-      `ABERTURA (5 min): cumprimente, diga o que vai mostrar e ancore a oferta de ${produto.nome}.`,
-      ...Array.from({ length: blocos }, (_, i) =>
-        `BLOCO ${i + 1} (10 min): demonstre o produto, leia 2 comentários, repita o preço R$ ${produto.preco
-          .toFixed(2)
-          .replace(".", ",")} e chame pro carrinho.`,
-      ),
-      `FECHAMENTO (5 min): recapitule, dê urgência de estoque e agende a próxima live.`,
-    ]);
-  };
-
   return (
     <div className="min-h-screen">
       <SiteHeader />
-      <div className="mx-auto max-w-6xl px-5 py-10">
+      <AppNav />
+      <main className="mx-auto max-w-6xl px-5 py-10">
         <h1 className="font-display text-3xl font-bold">Estúdio</h1>
-        <p className="mt-2 text-[13.5px] text-muted-foreground">
-          Multiplique seus vídeos e gere roteiros prontos pra gravar.
-        </p>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {(
-            [
-              { id: "multiplicador", label: "Multiplicador de Vídeos" },
-              { id: "roteiro", label: "Roteirizar vídeo com IA" },
-              { id: "live", label: "Roteirizar live" },
-            ] as { id: Aba; label: string }[]
-          ).map((a) => (
-            <button
-              key={a.id}
-              onClick={() => setAba(a.id)}
-              className={`rounded-full px-4 py-2 text-sm font-medium ${
-                aba === a.id
-                  ? "bg-secondary text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {a.label}
-            </button>
+        <p className="mt-2 text-[13.5px] text-muted-foreground">Transforme 18 trechos em 150 vídeos ou crie roteiros para qualquer produto ou serviço.</p>
+        <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Ferramentas do Estúdio">
+          {([{ id: "multiplicador", label: "Multiplicador de vídeos" }, { id: "roteiro", label: "Roteirizar vídeo" }, { id: "live", label: "Roteirizar live" }] as const).map((item) => (
+            <Button key={item.id} type="button" role="tab" aria-selected={aba === item.id} variant={aba === item.id ? "secondary" : "ghost"} onClick={() => setAba(item.id)}>{item.label}</Button>
           ))}
         </div>
+        {aba === "multiplicador" ? <Multiplicador /> : <RoteiroLivre tipo={aba} />}
+      </main>
+    </div>
+  );
+}
 
-        {aba === "multiplicador" && (
-          <>
-            <div className="mt-6 grid gap-4 lg:grid-cols-3">
-              {[
-                { t: "Ganchos", v: ganchos, set: setGanchos, n: listas.g.length },
-                { t: "Corpos", v: corpos, set: setCorpos, n: listas.c.length },
-                { t: "CTAs", v: ctas, set: setCtas, n: listas.t.length },
-              ].map((b) => (
-                <div key={b.t} className="glass rounded-2xl p-5">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-semibold">{b.t}</h2>
-                    <span className="text-xs text-primary">{b.n} pedaços</span>
-                  </div>
-                  <textarea
-                    value={b.v}
-                    onChange={(e) => b.set(e.target.value)}
-                    rows={10}
-                    className="mt-3 w-full resize-y rounded-xl border border-input bg-secondary/40 p-3 text-[13px] leading-relaxed outline-none focus:border-primary"
-                  />
-                  <p className="mt-2 text-xs text-muted-foreground">Um pedaço por linha.</p>
+function Multiplicador() {
+  const criar = useServerFn(criarVideo);
+  const consultar = useServerFn(consultarVideo);
+  const [clipes, setClipes] = useState<Record<Categoria, ClipeLocal[]>>({ gancho: [], corpo: [], cta: [] });
+  const [produto, setProduto] = useState("");
+  const [estilo, setEstilo] = useState("UGC natural, vertical, falando direto para a câmera");
+  const [resultados, setResultados] = useState<Resultado[]>([]);
+  const [progresso, setProgresso] = useState(0);
+  const [status, setStatus] = useState<string | null>(null);
+  const [erro, setErro] = useState<string | null>(null);
+  const pararRef = useRef(false);
+  const completos = clipes.gancho.length === 10 && clipes.corpo.length === 5 && clipes.cta.length === 3;
+  const combinacoes = useMemo(() => clipes.gancho.flatMap((gancho, gi) => clipes.corpo.flatMap((corpo, ci) => clipes.cta.map((cta, ti) => ({ id: `${gi}-${ci}-${ti}`, nome: `tarte-${gi + 1}-${ci + 1}-${ti + 1}.webm`, partes: [gancho, corpo, cta] })))), [clipes]);
+
+  useEffect(() => () => {
+    Object.values(clipes).flat().forEach((clipe) => URL.revokeObjectURL(clipe.url));
+    resultados.forEach((resultado) => URL.revokeObjectURL(resultado.url));
+  }, []);
+
+  const remover = (categoria: Categoria, id: string) => {
+    setClipes((atual) => ({ ...atual, [categoria]: atual[categoria].filter((clipe) => {
+      if (clipe.id === id) URL.revokeObjectURL(clipe.url);
+      return clipe.id !== id;
+    }) }));
+  };
+
+  const montarTodos = async () => {
+    if (!completos) return;
+    pararRef.current = false;
+    setErro(null);
+    setResultados([]);
+    setStatus("Montando os vídeos no seu aparelho…");
+    try {
+      for (let indice = 0; indice < combinacoes.length; indice++) {
+        if (pararRef.current) break;
+        const combinacao = combinacoes[indice];
+        if (!combinacao) continue;
+        const blob = await montarVideo(combinacao.partes);
+        const url = URL.createObjectURL(blob);
+        setResultados((atual) => [...atual, { id: combinacao.id, nome: combinacao.nome, url }]);
+        setProgresso(Math.round(((indice + 1) / combinacoes.length) * 100));
+      }
+      setStatus(pararRef.current ? "Montagem pausada. Os vídeos concluídos continuam disponíveis." : "Os 150 vídeos estão prontos na galeria abaixo.");
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : "Não foi possível montar os vídeos neste aparelho.");
+    }
+  };
+
+  const gerarClipe = async (categoria: Categoria, numero: number) => {
+    const instrucoes: Record<Categoria, string> = {
+      gancho: "uma abertura de 5 segundos com frase forte que desperte curiosidade",
+      corpo: "uma demonstração de 8 segundos mostrando benefício e uso",
+      cta: "um encerramento de 5 segundos chamando para comprar, comentar ou acessar o link",
+    };
+    const { id } = await criar({ data: { pedido: `Vídeo vertical ${estilo}. Divulgue ${produto}. Crie ${instrucoes[categoria]}, variação ${numero + 1}. Fala em português do Brasil, som limpo e sem texto ilegível.`, duracao: categoria === "corpo" ? "8s" : "5s", formato: "9:16" } });
+    for (let tentativa = 0; tentativa < 90; tentativa++) {
+      await new Promise((resolve) => window.setTimeout(resolve, 7000));
+      const resposta = await consultar({ data: { id } });
+      if (resposta.pronto && resposta.video) {
+        const blob = await (await fetch(resposta.video)).blob();
+        const arquivo = new File([blob], `ia-${categoria}-${numero + 1}.mp4`, { type: blob.type || "video/mp4" });
+        return { id: crypto.randomUUID(), nome: arquivo.name, arquivo, url: URL.createObjectURL(blob) };
+      }
+    }
+    throw new Error("Um dos vídeos demorou além do esperado.");
+  };
+
+  const gerarPacoteIA = async () => {
+    if (produto.trim().length < 2) { setErro("Digite o produto ou serviço antes de gerar os 18 trechos."); return; }
+    setErro(null);
+    setProgresso(0);
+    setStatus("Gerando os 18 trechos com IA, um por vez…");
+    try {
+      const novos: Record<Categoria, ClipeLocal[]> = { gancho: [], corpo: [], cta: [] };
+      let concluido = 0;
+      for (const categoria of ["gancho", "corpo", "cta"] as Categoria[]) {
+        for (let indice = 0; indice < limites[categoria]; indice++) {
+          setStatus(`Gerando ${nomes[categoria].toLowerCase()} ${indice + 1} de ${limites[categoria]}…`);
+          novos[categoria].push(await gerarClipe(categoria, indice));
+          concluido += 1;
+          setProgresso(Math.round((concluido / 18) * 100));
+          setClipes({ gancho: [...novos.gancho], corpo: [...novos.corpo], cta: [...novos.cta] });
+        }
+      }
+      setStatus("Os 18 trechos foram gerados. Agora você pode montar os 150 vídeos.");
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : "Não foi possível gerar os vídeos com IA.");
+      setStatus("Os trechos concluídos foram mantidos.");
+    }
+  };
+
+  return (
+    <section className="mt-6">
+      <div className="grid gap-4 lg:grid-cols-3">
+        {(["gancho", "corpo", "cta"] as Categoria[]).map((categoria) => (
+          <div key={categoria} className="rounded-lg border border-border bg-card p-5">
+            <div className="flex items-center justify-between"><h2 className="font-semibold">{nomes[categoria]}</h2><span className="text-xs text-primary">{clipes[categoria].length}/{limites[categoria]}</span></div>
+            <label className="mt-4 flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-input bg-secondary/30 px-3 py-4 text-xs text-muted-foreground hover:border-primary/60 hover:text-foreground">
+              <Upload className="h-4 w-4" /> Buscar vídeos na galeria
+              <input type="file" accept="video/*" multiple className="sr-only" onChange={(event) => { setClipes((atual) => ({ ...atual, [categoria]: arquivosParaClipes(event.target.files, atual[categoria], limites[categoria]) })); event.target.value = ""; }} />
+            </label>
+            <div className="mt-3 space-y-2">
+              {clipes[categoria].map((clipe, indice) => (
+                <div key={clipe.id} className="flex items-center gap-2 rounded-md border border-border p-2">
+                  <video src={clipe.url} muted playsInline className="h-12 w-9 rounded-sm object-cover" />
+                  <span className="min-w-0 flex-1 truncate text-xs">{indice + 1}. {clipe.nome}</span>
+                  <Button size="icon" variant="ghost" aria-label={`Remover ${clipe.nome}`} onClick={() => remover(categoria, clipe.id)}><Trash2 className="h-4 w-4" /></Button>
                 </div>
               ))}
             </div>
-
-            <div className="glow mt-4 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-gradient-neon px-6 py-5 text-primary-foreground">
-              <p className="font-display text-xl font-bold">
-                {listas.g.length} × {listas.c.length} × {listas.t.length} = {total} vídeos
-              </p>
-              <button
-                onClick={() => setGerado(true)}
-                className="rounded-full bg-background/85 px-5 py-2.5 text-sm font-semibold text-foreground"
-              >
-                Montar os {total} vídeos
-              </button>
-            </div>
-
-            {gerado && (
-              <div className="mt-8">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <h2 className="font-display text-xl font-bold">
-                    Galeria montada · ordem certa de postar
-                  </h2>
-                  <span className="text-[13px] text-muted-foreground">
-                    mostrando os 60 primeiros de {combos.length}
-                  </span>
-                </div>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {combos.slice(0, 60).map((c, i) => (
-                    <div key={c.id} className="glass rounded-2xl p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">
-                          vídeo {String(i + 1).padStart(3, "0")}
-                        </span>
-                        <span className={`text-xs font-semibold ${c.cor}`}>{c.rotulo}</span>
-                      </div>
-                      <p className="mt-3 text-[13px] font-medium">{c.gancho}</p>
-                      <p className="mt-1.5 text-[12.5px] text-muted-foreground">{c.corpo}</p>
-                      <p className="mt-1.5 text-[12.5px] text-primary">{c.cta}</p>
-                      <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-                        <span className="text-[11.5px] text-muted-foreground">{c.nota}</span>
-                        <button className="text-[12px] font-semibold text-foreground">
-                          Baixar
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {(aba === "roteiro" || aba === "live") && (
-          <div className="mt-6 grid gap-4 lg:grid-cols-[340px_1fr]">
-            <div className="glass rounded-2xl p-5">
-              <label className="text-xs text-muted-foreground">Produto</label>
-              <select
-                value={produtoId}
-                onChange={(e) => setProdutoId(e.target.value)}
-                className="mt-1.5 w-full rounded-xl border border-input bg-secondary/40 px-3 py-2 text-sm outline-none focus:border-primary"
-              >
-                {produtos.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.nome}
-                  </option>
-                ))}
-              </select>
-
-              {aba === "live" && (
-                <div className="mt-4">
-                  <label className="text-xs text-muted-foreground">
-                    Duração da live: {duracao} min
-                  </label>
-                  <input
-                    type="range"
-                    min={20}
-                    max={120}
-                    step={10}
-                    value={duracao}
-                    onChange={(e) => setDuracao(Number(e.target.value))}
-                    className="mt-2 w-full"
-                  />
-                </div>
-              )}
-
-              <button
-                onClick={aba === "roteiro" ? gerarRoteiro : gerarLive}
-                className="mt-5 w-full rounded-full bg-gradient-neon py-3 text-sm font-semibold text-primary-foreground"
-              >
-                Gerar roteiro
-              </button>
-              <p className="mt-3 text-xs text-muted-foreground">
-                Roteiro montado a partir das métricas do produto escolhido.
-              </p>
-            </div>
-
-            <div className="glass rounded-2xl p-6">
-              {aba === "roteiro" ? (
-                roteiro ? (
-                  <div className="space-y-3">
-                    {roteiro.map((l) => (
-                      <p key={l} className="text-[14px] leading-relaxed">
-                        {l}
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    Escolha um produto e gere o roteiro de gancho, corpo e CTA.
-                  </p>
-                )
-              ) : liveRoteiro ? (
-                <div className="space-y-3">
-                  <p className="text-xs tracking-widest text-primary uppercase">
-                    Modo teleprompter
-                  </p>
-                  {liveRoteiro.map((l, i) => (
-                    <p key={i} className="text-[15px] leading-relaxed">
-                      {l}
-                    </p>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Escolha o produto e a duração para montar o roteiro da live.
-                </p>
-              )}
-            </div>
           </div>
-        )}
+        ))}
       </div>
-    </div>
+
+      <div className="mt-4 grid gap-4 rounded-lg border border-border bg-card p-5 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="text-xs text-muted-foreground">Produto ou serviço<input value={produto} onChange={(e) => setProduto(e.target.value)} placeholder="Ex.: curso de confeitaria" className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground outline-none focus:border-primary" /></label>
+          <label className="text-xs text-muted-foreground">Estilo dos vídeos<input value={estilo} onChange={(e) => setEstilo(e.target.value)} className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground outline-none focus:border-primary" /></label>
+        </div>
+        <Button onClick={gerarPacoteIA} variant="outline"><Sparkles className="h-4 w-4" />Gerar 10 ganchos, 5 corpos e 3 CTAs com IA</Button>
+      </div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-lg bg-gradient-neon px-6 py-5 text-primary-foreground">
+        <div><p className="font-display text-xl font-bold">10 × 5 × 3 = 150 vídeos</p><p className="text-xs opacity-80">A montagem acontece no seu aparelho e preserva o áudio.</p></div>
+        <div className="flex gap-2"><Button onClick={montarTodos} disabled={!completos || Boolean(status?.startsWith("Montando"))} variant="secondary"><Film className="h-4 w-4" />Montar os 150 vídeos</Button>{status?.startsWith("Montando") && <Button onClick={() => { pararRef.current = true; }} variant="outline">Pausar</Button>}</div>
+      </div>
+      {(status || erro) && <div className="mt-4 rounded-md border border-border p-4" aria-live="polite"><p className="text-sm">{erro ?? status}</p>{progresso > 0 && <div className="mt-3 h-2 overflow-hidden rounded-full bg-secondary"><div className="h-full bg-gradient-neon" style={{ width: `${progresso}%` }} /></div>}</div>}
+      {resultados.length > 0 && <div className="mt-8"><h2 className="font-display text-xl font-bold">Galeria · {resultados.length} de 150 prontos</h2><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{resultados.map((resultado, indice) => <div key={resultado.id} className="rounded-lg border border-border bg-card p-3"><video src={resultado.url} controls playsInline className="aspect-[9/16] max-h-72 w-full rounded-md bg-background object-contain" /><div className="mt-3 flex items-center justify-between"><span className="text-xs text-muted-foreground">Vídeo {String(indice + 1).padStart(3, "0")}</span><Button size="sm" variant="outline" onClick={async () => baixarBlob(await (await fetch(resultado.url)).blob(), resultado.nome)}><Download className="h-4 w-4" />Baixar</Button></div></div>)}</div></div>}
+    </section>
   );
+}
+
+function RoteiroLivre({ tipo }: { tipo: "roteiro" | "live" }) {
+  const gerar = useServerFn(gerarTexto);
+  const [produto, setProduto] = useState("");
+  const [publico, setPublico] = useState("");
+  const [duracao, setDuracao] = useState(tipo === "live" ? "60 minutos" : "30 segundos");
+  const [texto, setTexto] = useState<string | null>(null);
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const enviar = async () => {
+    if (produto.trim().length < 2) { setErro("Digite o produto ou serviço."); return; }
+    setCarregando(true); setErro(null); setTexto(null);
+    try {
+      const resposta = await gerar({ data: { sistema: tipo === "live" ? "Você cria roteiros completos de live de vendas, com falas prontas, demonstrações, interação e chamadas para ação." : "Você cria roteiros de vídeos curtos para redes sociais, com gancho, corpo, prova e chamada para ação.", pedido: `Crie um roteiro para divulgar ${produto}. Formato: ${tipo === "live" ? "live" : "vídeo curto"}. Duração: ${duracao}. Público: ${publico || "defina o público mais provável"}. Entregue falas prontas para ler.` } });
+      setTexto(resposta.texto);
+    } catch (e) { setErro(e instanceof Error ? e.message : "Não foi possível criar o roteiro."); }
+    finally { setCarregando(false); }
+  };
+  return <section className="mt-6 grid gap-4 lg:grid-cols-[360px_1fr]"><div className="rounded-lg border border-border bg-card p-5"><label className="text-xs text-muted-foreground">Produto ou serviço<input value={produto} onChange={(e) => setProduto(e.target.value)} placeholder="Digite livremente" className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground outline-none focus:border-primary" /></label><label className="mt-4 block text-xs text-muted-foreground">Público<input value={publico} onChange={(e) => setPublico(e.target.value)} placeholder="Ex.: mães empreendedoras" className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground outline-none focus:border-primary" /></label><label className="mt-4 block text-xs text-muted-foreground">Duração<input value={duracao} onChange={(e) => setDuracao(e.target.value)} className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground outline-none focus:border-primary" /></label><Button onClick={enviar} disabled={carregando} className="mt-5 w-full">{carregando ? "Criando…" : "Criar roteiro com IA"}</Button></div><div className="rounded-lg border border-border bg-card p-6"><h2 className="mb-4 font-display text-lg font-semibold">Roteiro</h2><AiResultado texto={texto} carregando={carregando} erro={erro} vazio="Digite qualquer produto ou serviço e crie o roteiro." /></div></section>;
 }
