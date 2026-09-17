@@ -1,105 +1,54 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { SiteHeader } from "@/components/SiteHeader";
+import { useServerFn } from "@tanstack/react-start";
+import { Download, ImageIcon, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { AiResultado } from "@/components/AiResultado";
 import { AppNav } from "@/components/AppNav";
-import { criadores, brl } from "@/lib/tarte-data";
+import { SiteHeader } from "@/components/SiteHeader";
+import { Button } from "@/components/ui/button";
+import { gerarImagemCriativo, gerarTexto } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/criadores")({
-  head: () => ({
-    meta: [
-      { title: "Criadores e lojas que mais faturam no TikTok Shop BR — T@arte" },
-      {
-        name: "description",
-        content:
-          "Ranking de criadores e lojas que mais faturam no TikTok Shop Brasil, com seguidores, nicho e volume de vídeos.",
-      },
-      { property: "og:title", content: "Criadores que mais faturam — T@arte" },
-      {
-        property: "og:description",
-        content: "Encontre criadores vencedores no seu nicho e veja o que eles postam.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: Criadores,
+  head: () => ({ meta: [
+    { title: "Criativos para redes sociais — T@arte" },
+    { name: "description", content: "Crie conceitos, textos, legendas e imagens para TikTok, Instagram e YouTube com inteligência artificial." },
+    { property: "og:title", content: "Criativos para redes sociais — T@arte" },
+    { property: "og:description", content: "Produza seu criativo completo com texto e imagem prontos para postar." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+  ] }), component: Criativos,
 });
 
-function Criadores() {
-  const [busca, setBusca] = useState("");
-  const [nicho, setNicho] = useState("Todos");
+function Criativos() {
+  const escrever = useServerFn(gerarTexto);
+  const criarImagem = useServerFn(gerarImagemCriativo);
+  const [produto, setProduto] = useState("");
+  const [rede, setRede] = useState("Instagram");
+  const [formato, setFormato] = useState("Post vertical 4:5");
+  const [objetivo, setObjetivo] = useState("Vender");
+  const [conceito, setConceito] = useState("");
+  const [texto, setTexto] = useState<string | null>(null);
+  const [imagem, setImagem] = useState<string | null>(null);
+  const [estado, setEstado] = useState<"parado" | "texto" | "imagem">("parado");
+  const [erro, setErro] = useState<string | null>(null);
 
-  const nichosDisp = useMemo(
-    () => ["Todos", ...Array.from(new Set(criadores.map((c) => c.nicho)))],
-    [],
-  );
+  const gerarCopy = async () => {
+    if (produto.trim().length < 2) { setErro("Digite o produto ou serviço do criativo."); return; }
+    setEstado("texto"); setErro(null); setTexto(null);
+    try {
+      const resposta = await escrever({ data: { sistema: "Você é diretor criativo de redes sociais. Crie material original, específico e pronto para publicar.", pedido: `Crie um criativo para ${rede}, formato ${formato}, objetivo ${objetivo}, divulgando ${produto}. Preferência da pessoa: ${conceito || "defina a melhor direção"}. Entregue conceito visual, título, texto principal, legenda, CTA e hashtags.` } });
+      setTexto(resposta.texto);
+    } catch (e) { setErro(e instanceof Error ? e.message : "Não foi possível criar o texto."); }
+    finally { setEstado("parado"); }
+  };
 
-  const lista = criadores
-    .filter((c) => (nicho === "Todos" ? true : c.nicho === nicho))
-    .filter((c) => c.nome.toLowerCase().includes(busca.toLowerCase()))
-    .sort((a, b) => b.faturamento - a.faturamento);
+  const gerarArte = async () => {
+    if (produto.trim().length < 2) { setErro("Digite o produto ou serviço do criativo."); return; }
+    setEstado("imagem"); setErro(null); setImagem(null);
+    try { const resposta = await criarImagem({ data: { produto, rede, formato, conceito: `${objetivo}. ${conceito}` } }); setImagem(resposta.imagem); }
+    catch (e) { setErro(e instanceof Error ? e.message : "Não foi possível criar a imagem."); }
+    finally { setEstado("parado"); }
+  };
 
-  return (
-    <div className="min-h-screen">
-      <SiteHeader />
-      <AppNav />
-      <div className="mx-auto max-w-6xl px-5 py-10">
-        <h1 className="font-display text-3xl font-bold">Criadores e lojas</h1>
-        <p className="mt-2 text-[13.5px] text-muted-foreground">
-          Quem mais fatura no TikTok Shop Brasil — pra você se espelhar ou convidar pra divulgar
-          seus produtos.
-        </p>
-
-        <div className="mt-5 flex flex-wrap gap-3">
-          <input
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            placeholder="Buscar criador…"
-            className="w-full max-w-xs rounded-xl border border-input bg-secondary/40 px-3 py-2 text-sm outline-none focus:border-primary"
-          />
-          <select
-            value={nicho}
-            onChange={(e) => setNicho(e.target.value)}
-            className="rounded-xl border border-input bg-secondary/40 px-3 py-2 text-sm outline-none focus:border-primary"
-          >
-            {nichosDisp.map((n) => (
-              <option key={n}>{n}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {lista.map((c, i) => (
-            <div key={c.nome} className="glass rounded-2xl p-5">
-              <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-neon font-display font-bold text-primary-foreground">
-                  {i + 1}
-                </span>
-                <div>
-                  <p className="font-semibold">{c.nome}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {c.nicho} · {c.seguidores} seguidores
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 flex items-end justify-between">
-                <div>
-                  <p className="text-xs text-muted-foreground">Faturamento no período</p>
-                  <p className="font-display text-xl font-bold text-primary">
-                    {brl(c.faturamento)}
-                  </p>
-                </div>
-                <p className="text-xs text-muted-foreground">{c.videos} vídeos</p>
-              </div>
-            </div>
-          ))}
-          {lista.length === 0 && (
-            <p className="py-8 text-center text-muted-foreground md:col-span-2 lg:col-span-3">
-              Nenhum criador com esse filtro.
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="min-h-screen"><SiteHeader /><AppNav /><main className="mx-auto max-w-6xl px-5 py-10"><div className="flex items-start gap-3"><div className="grid h-11 w-11 place-items-center rounded-lg bg-primary/10 text-primary"><Sparkles className="h-5 w-5" /></div><div><h1 className="font-display text-3xl font-bold">Criativos para redes sociais</h1><p className="mt-1 text-[13.5px] text-muted-foreground">Crie conceito, texto, legenda e imagem para publicar nas suas redes.</p></div></div><div className="mt-7 grid gap-4 lg:grid-cols-[360px_1fr]"><section className="rounded-lg border border-border bg-card p-5"><label className="text-xs text-muted-foreground">Produto ou serviço<input value={produto} onChange={(e) => setProduto(e.target.value)} placeholder="Ex.: consultoria financeira" className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground outline-none focus:border-primary" /></label><div className="mt-4 grid grid-cols-2 gap-3"><label className="text-xs text-muted-foreground">Rede<select value={rede} onChange={(e) => setRede(e.target.value)} className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground"><option>TikTok</option><option>Instagram</option><option>YouTube</option><option>WhatsApp</option></select></label><label className="text-xs text-muted-foreground">Objetivo<select value={objetivo} onChange={(e) => setObjetivo(e.target.value)} className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground"><option>Vender</option><option>Gerar contatos</option><option>Engajar</option><option>Apresentar marca</option></select></label></div><label className="mt-4 block text-xs text-muted-foreground">Formato<select value={formato} onChange={(e) => setFormato(e.target.value)} className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground"><option>Post vertical 4:5</option><option>Story 9:16</option><option>Capa de vídeo 9:16</option><option>Miniatura 16:9</option><option>Quadrado 1:1</option></select></label><label className="mt-4 block text-xs text-muted-foreground">Ideia ou estilo<textarea value={conceito} onChange={(e) => setConceito(e.target.value)} rows={4} placeholder="Ex.: moderno, alegre, com o produto no centro" className="mt-1.5 w-full rounded-md border border-input bg-secondary/40 px-3 py-2 text-sm text-foreground outline-none focus:border-primary" /></label><div className="mt-5 grid gap-2"><Button onClick={gerarCopy} disabled={estado !== "parado"}><Sparkles className="h-4 w-4" />{estado === "texto" ? "Criando texto…" : "Criar texto do criativo"}</Button><Button onClick={gerarArte} disabled={estado !== "parado"} variant="outline"><ImageIcon className="h-4 w-4" />{estado === "imagem" ? "Criando imagem…" : "Criar imagem do criativo"}</Button></div></section><section className="grid gap-4 md:grid-cols-2"><div className="rounded-lg border border-border bg-card p-5"><h2 className="mb-4 font-display text-lg font-semibold">Texto pronto</h2><AiResultado texto={texto} carregando={estado === "texto"} erro={erro} vazio="Configure o criativo e gere o texto." />{texto && <Button variant="outline" size="sm" className="mt-4" onClick={() => navigator.clipboard.writeText(texto)}>Copiar texto</Button>}</div><div className="flex min-h-96 items-center justify-center rounded-lg border border-border bg-card p-5">{estado === "imagem" ? <p className="text-sm text-primary">Criando sua imagem…</p> : imagem ? <div className="text-center"><img src={imagem} alt={`Criativo para ${produto}`} className="max-h-[560px] w-full rounded-md object-contain" /><Button asChild variant="outline" className="mt-4"><a href={imagem} download="tarte-criativo.png"><Download className="h-4 w-4" />Baixar imagem</a></Button></div> : <div className="text-center text-muted-foreground"><ImageIcon className="mx-auto h-8 w-8" /><p className="mt-3 text-sm">Sua imagem aparecerá aqui.</p></div>}</div></section></div></main></div>;
 }

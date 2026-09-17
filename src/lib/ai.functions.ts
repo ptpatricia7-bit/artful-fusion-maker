@@ -220,6 +220,51 @@ export const gerarImagemCriativo = createServerFn({ method: "POST" })
     return { imagem };
   });
 
+type PesquisaInput = { termo: string; plataforma: string };
+
+export const pesquisarMercado = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => {
+    const d = data as Partial<PesquisaInput>;
+    if (!d || typeof d.termo !== "string" || d.termo.trim().length < 2) {
+      throw new Error("Digite um produto, serviço ou nicho para pesquisar.");
+    }
+    const plataforma = ["TikTok", "Instagram", "YouTube", "Todas"].includes(String(d.plataforma))
+      ? String(d.plataforma)
+      : "Todas";
+    return { termo: d.termo.slice(0, 300), plataforma };
+  })
+  .handler(async ({ data }) => {
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) throw new Error("A inteligência artificial não está configurada.");
+    const res = await fetch(`${GATEWAY}/responses`, {
+      method: "POST",
+      headers: { "Lovable-API-Key": key, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai/gpt-6-astra",
+        input: [
+          {
+            role: "developer",
+            content:
+              "Pesquise dados públicos recentes de social commerce. Responda em português do Brasil. Diferencie fatos, sinais públicos e estimativas. Nunca invente faturamento. Inclua ao final as URLs das fontes consultadas.",
+          },
+          {
+            role: "user",
+            content: `Pesquise ${data.termo} em ${data.plataforma === "Todas" ? "TikTok, Instagram e YouTube" : data.plataforma}. Mostre: produtos ou ofertas em alta, sinais de vendas/faturamento disponíveis publicamente, criadores ou canais que mais se destacam, formatos de conteúdo vencedores e oportunidades práticas. Seja objetivo.`,
+          },
+        ],
+        tools: [{ type: "web_search" }],
+        stream: true,
+        reasoning: { effort: "medium", summary: "auto" },
+        include: ["reasoning.encrypted_content"],
+        store: false,
+      }),
+    });
+    if (!res.ok) throw new Error(await erroAmigavel(res));
+    const texto = await lerRespostaEmFluxo(res);
+    if (!texto) throw new Error("A pesquisa não encontrou informações suficientes.");
+    return { texto };
+  });
+
 type VideoInput = { pedido: string; duracao: string; formato: string; imagem?: string | undefined };
 
 function validarVideo(data: unknown): VideoInput {
