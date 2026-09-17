@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroPainel from "@/assets/hero-painel.jpg";
+import painelAsset from "@/assets/tarte-roupa.png.asset.json";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { videosVirais, produtos, brl, faq } from "@/lib/tarte-data";
@@ -128,7 +128,7 @@ function Home() {
 
           <div className="glass relative overflow-hidden rounded-3xl p-2">
             <img
-              src={heroPainel}
+              src={painelAsset.url}
               alt="Painel do T@arte com ranking de produtos e métricas do TikTok Shop"
               width={1280}
               height={960}
@@ -198,7 +198,7 @@ function Home() {
               { to: "/produtos", t: "Produtos e vídeos", d: "Cada produto com faturamento, comissão e os vídeos que vendem ele." },
               { to: "/cabine", t: "Cabine de troca de roupas", d: "A IA veste a peça na sua foto — grave antes do produto chegar." },
               { to: "/spy", t: "GeraSpy ADS", d: "Espie os anúncios que mais vendem e a IA cria variações melhores." },
-              { to: "/criadores", t: "Criadores e lojas", d: "Quem mais fatura no TikTok Shop BR, por nicho." },
+              { to: "/criadores", t: "Criativos para redes sociais", d: "Crie conceito, texto, legenda e imagem para TikTok, Instagram e YouTube." },
               { to: "/cofre", t: "Cofre de Prompts", d: "Prompts prontos e um criador de prompts com IA sob medida." },
               { to: "/indique", t: "Indique e ganhe", d: "Compartilhe seu link e ganhe meses grátis por amigo." },
               { to: "/estudio", t: "Multiplicador de Vídeos", d: "18 gravações viram até 150 vídeos com etiqueta de originalidade." },

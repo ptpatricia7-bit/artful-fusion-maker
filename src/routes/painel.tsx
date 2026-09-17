@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
-import { produtos, nichos, periodos, videosVirais, criadores, brl } from "@/lib/tarte-data";
+import painelAsset from "@/assets/tarte-roupa.png.asset.json";
+import { produtos, nichos, periodos, videosVirais, brl } from "@/lib/tarte-data";
 
 export const Route = createFileRoute("/painel")({
   head: () => ({
@@ -24,12 +25,11 @@ export const Route = createFileRoute("/painel")({
   component: Painel,
 });
 
-type Aba = "produtos" | "videos" | "criadores" | "tendencias";
+type Aba = "produtos" | "videos" | "tendencias";
 
 const abas: { id: Aba; label: string }[] = [
   { id: "produtos", label: "TOP produtos" },
   { id: "videos", label: "Vídeos virais" },
-  { id: "criadores", label: "Criadores e lojas" },
   { id: "tendencias", label: "Tendências 24h" },
 ];
 
@@ -65,7 +65,8 @@ function Painel() {
       <SiteHeader />
 
       <div className="mx-auto max-w-6xl px-5 py-10">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="grid gap-5 overflow-hidden rounded-lg border border-border bg-card md:grid-cols-[1fr_360px] md:items-center">
+          <div className="p-6">
           <div>
             <h1 className="font-display text-3xl font-bold">Painel T@arte</h1>
             <p className="mt-2 text-[13.5px] text-muted-foreground">
@@ -78,6 +79,8 @@ function Painel() {
           >
             Multiplicar vídeos
           </Link>
+          </div>
+          <img src={painelAsset.url} alt="Painel visual do T@arte com métricas de redes sociais" className="h-full min-h-56 w-full object-cover" />
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -242,33 +245,6 @@ function Painel() {
                 <p className="mt-2 text-[13px] text-muted-foreground">Produto: {v.produto}</p>
               </div>
             ))}
-          </div>
-        )}
-
-        {aba === "criadores" && (
-          <div className="glass mt-4 overflow-x-auto rounded-2xl">
-            <table className="w-full min-w-[560px] text-sm">
-              <thead>
-                <tr className="text-left text-xs tracking-widest text-muted-foreground uppercase">
-                  <th className="px-5 py-3">Criador</th>
-                  <th className="px-5 py-3">Nicho</th>
-                  <th className="px-5 py-3">Seguidores</th>
-                  <th className="px-5 py-3">Faturamento</th>
-                  <th className="px-5 py-3">Vídeos</th>
-                </tr>
-              </thead>
-              <tbody>
-                {criadores.map((c) => (
-                  <tr key={c.nome} className="border-t border-border">
-                    <td className="px-5 py-3 font-medium">{c.nome}</td>
-                    <td className="px-5 py-3 text-muted-foreground">{c.nicho}</td>
-                    <td className="px-5 py-3">{c.seguidores}</td>
-                    <td className="px-5 py-3 font-semibold text-primary">{brl(c.faturamento)}</td>
-                    <td className="px-5 py-3">{c.videos}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         )}
 

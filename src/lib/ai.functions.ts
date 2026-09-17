@@ -23,7 +23,41 @@ async function erroAmigavel(res: Response) {
   if (res.status === 429) {
     return "Muitos pedidos ao mesmo tempo. Espere alguns segundos e tente de novo.";
   }
+  if (res.status === 403) {
+    return corpo?.message ?? "A inteligência artificial está bloqueada nas configurações do espaço de trabalho.";
+  }
   return corpo?.message ?? "A inteligência artificial não respondeu agora. Tente novamente.";
+}
+
+async function lerRespostaEmFluxo(res: Response) {
+  if (!res.body) return "";
+  const leitor = res.body.pipeThrough(new TextDecoderStream()).getReader();
+  let restante = "";
+  let texto = "";
+  while (true) {
+    const { value, done } = await leitor.read();
+    if (done) break;
+    restante += value;
+    const linhas = restante.split("\n");
+    restante = linhas.pop() ?? "";
+    for (const linha of linhas) {
+      if (!linha.startsWith("data: ") || linha === "data: [DONE]") continue;
+      try {
+        const evento = JSON.parse(linha.slice(6)) as {
+          type?: string;
+          delta?: string;
+          response?: { output_text?: string };
+        };
+        if (evento.type === "response.output_text.delta" && evento.delta) texto += evento.delta;
+        if (!texto && evento.type === "response.completed" && evento.response?.output_text) {
+          texto = evento.response.output_text;
+        }
+      } catch {
+        // Eventos incompletos ou sem texto podem ser ignorados.
+      }
+    }
+  }
+  return texto.trim();
 }
 
 /** Gera texto (roteiros, análises, prompts) com a IA integrada. */
@@ -33,30 +67,25 @@ export const gerarTexto = createServerFn({ method: "POST" })
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("A inteligência artificial não está configurada.");
 
-    const res = await fetch(`${GATEWAY}/chat/completions`, {
+    const res = await fetch(`${GATEWAY}/responses`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      headers: { "Lovable-API-Key": key, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-3.8-flash",
-        messages: [
-          {
-            role: "system",
-            content:
-              (data.sistema ||
-                "Você é especialista em TikTok Shop Brasil, vídeos curtos que vendem e copy de conversão.") +
-              " Responda sempre em português do Brasil, direto ao ponto, em texto simples com títulos curtos. Não use markdown com asteriscos.",
-          },
+        model: "openai/gpt-6-astra",
+        input: [
+          { role: "developer", content: (data.sistema || "Você é especialista em conteúdo que vende nas redes sociais.") + " Responda em português do Brasil, direto ao ponto, com títulos curtos e sem asteriscos." },
           { role: "user", content: data.pedido },
         ],
+        stream: true,
+        reasoning: { effort: "medium", summary: "auto" },
+        include: ["reasoning.encrypted_content"],
+        store: false,
       }),
     });
 
     if (!res.ok) throw new Error(await erroAmigavel(res));
 
-    const json = (await res.json()) as {
-      choices?: { message?: { content?: string } }[];
-    };
-    const texto = json.choices?.[0]?.message?.content?.trim();
+    const texto = await lerRespostaEmFluxo(res);
     if (!texto) throw new Error("A inteligência artificial devolveu uma resposta vazia.");
     return { texto };
   });
@@ -155,6 +184,85 @@ export const gerarImagemEstudio = createServerFn({ method: "POST" })
     const b64 = json.data?.[0]?.b64_json;
     if (!b64) throw new Error("Não foi possível criar a imagem. Tente outra foto ou descrição.");
     return { imagem: `data:image/png;base64,${b64}` };
+  });
+
+type CriativoInput = { produto: string; rede: string; formato: string; conceito: string };
+
+export const gerarImagemCriativo = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => {
+    const d = data as Partial<CriativoInput>;
+    if (!d || typeof d.produto !== "string" || d.produto.trim().length < 2) {
+      throw new Error("Digite o produto ou serviço do criativo.");
+    }
+    return {
+      produto: d.produto.slice(0, 300),
+      rede: typeof d.rede === "string" ? d.rede.slice(0, 50) : "Instagram",
+      formato: typeof d.formato === "string" ? d.formato.slice(0, 80) : "Feed vertical",
+      conceito: typeof d.conceito === "string" ? d.conceito.slice(0, 1000) : "",
+    };
+  })
+  .handler(async ({ data }) => {
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) throw new Error("A inteligência artificial não está configurada.");
+    const res = await fetch(`${GATEWAY}/images/generations`, {
+      method: "POST",
+      headers: { "Lovable-API-Key": key, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai/gpt-image-2.5-sunburst",
+        prompt: `Crie uma imagem publicitária profissional para ${data.rede}, formato ${data.formato}, divulgando ${data.produto}. ${data.conceito}. Sem logotipos inventados e sem textos ilegíveis. Composição pronta para redes sociais.`,
+      }),
+    });
+    if (!res.ok) throw new Error(await erroAmigavel(res));
+    const json = (await res.json()) as { data?: { b64_json?: string; url?: string }[] };
+    const item = json.data?.[0];
+    const imagem = item?.b64_json ? `data:image/png;base64,${item.b64_json}` : item?.url;
+    if (!imagem) throw new Error("Não foi possível criar a imagem do criativo.");
+    return { imagem };
+  });
+
+type PesquisaInput = { termo: string; plataforma: string };
+
+export const pesquisarMercado = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => {
+    const d = data as Partial<PesquisaInput>;
+    if (!d || typeof d.termo !== "string" || d.termo.trim().length < 2) {
+      throw new Error("Digite um produto, serviço ou nicho para pesquisar.");
+    }
+    const plataforma = ["TikTok", "Instagram", "YouTube", "Todas"].includes(String(d.plataforma))
+      ? String(d.plataforma)
+      : "Todas";
+    return { termo: d.termo.slice(0, 300), plataforma };
+  })
+  .handler(async ({ data }) => {
+    const key = process.env["LOVABLE_API_KEY"];
+    if (!key) throw new Error("A inteligência artificial não está configurada.");
+    const res = await fetch(`${GATEWAY}/responses`, {
+      method: "POST",
+      headers: { "Lovable-API-Key": key, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "openai/gpt-6-astra",
+        input: [
+          {
+            role: "developer",
+            content:
+              "Pesquise dados públicos recentes de social commerce. Responda em português do Brasil. Diferencie fatos, sinais públicos e estimativas. Nunca invente faturamento. Inclua ao final as URLs das fontes consultadas.",
+          },
+          {
+            role: "user",
+            content: `Pesquise ${data.termo} em ${data.plataforma === "Todas" ? "TikTok, Instagram e YouTube" : data.plataforma}. Mostre: produtos ou ofertas em alta, sinais de vendas/faturamento disponíveis publicamente, criadores ou canais que mais se destacam, formatos de conteúdo vencedores e oportunidades práticas. Seja objetivo.`,
+          },
+        ],
+        tools: [{ type: "web_search" }],
+        stream: true,
+        reasoning: { effort: "medium", summary: "auto" },
+        include: ["reasoning.encrypted_content"],
+        store: false,
+      }),
+    });
+    if (!res.ok) throw new Error(await erroAmigavel(res));
+    const texto = await lerRespostaEmFluxo(res);
+    if (!texto) throw new Error("A pesquisa não encontrou informações suficientes.");
+    return { texto };
   });
 
 type VideoInput = { pedido: string; duracao: string; formato: string; imagem?: string | undefined };
