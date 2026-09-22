@@ -70,7 +70,7 @@ export const criadores: Criador[] = [
 export const planos = [
   {
     nome: "Mensal",
-    preco: "R$ 97",
+    preco: "R$ 25",
     ciclo: "/mês",
     destaque: false,
     resumo: "Pra testar o método com tudo liberado.",
@@ -84,7 +84,7 @@ export const planos = [
   },
   {
     nome: "Trimestral",
-    preco: "R$ 237",
+    preco: "R$ 50",
     ciclo: "/3 meses",
     destaque: true,
     resumo: "O plano de quem vai postar todo dia.",
@@ -99,7 +99,7 @@ export const planos = [
   },
   {
     nome: "Anual",
-    preco: "R$ 697",
+    preco: "R$ 97",
     ciclo: "/ano",
     destaque: false,
     resumo: "Melhor custo por mês, tudo liberado.",
