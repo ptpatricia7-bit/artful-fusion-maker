@@ -84,7 +84,7 @@ export const planos = [
   },
   {
     nome: "Trimestral",
-    preco: "R$ 50",
+    preco: "R$ 97",
     ciclo: "/3 meses",
     destaque: true,
     resumo: "O plano de quem vai postar todo dia.",
