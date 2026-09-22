@@ -99,7 +99,7 @@ export const planos = [
   },
   {
     nome: "Anual",
-    preco: "R$ 97",
+    preco: "R$ 698",
     ciclo: "/ano",
     destaque: false,
     resumo: "Melhor custo por mês, tudo liberado.",
