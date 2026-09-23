@@ -14,7 +14,7 @@
 - [x] Indique e Ganhe (link + níveis)
 - [x] Gerador de vídeo com IA (cena ou foto de partida, som, download)
 - [x] Gravar vídeo do usuário: câmera com teleprompter, avatares de IA e compartilhar no WhatsApp/redes
-- [ ] Login/banco de dados reais (aguardando decisão da usuária)
+- [ ] Login real com e-mail e senha, perfis vinculados e proteção das ferramentas (em andamento)
 - [x] Multiplicador com vídeos reais: 10 ganchos, 5 corpos, 3 CTAs e 150 combinações
 - [x] Roteiros livres para produto ou serviço, incluindo live
 - [x] Pesquisa assistida de produtos e criadores em TikTok, Instagram e YouTube
