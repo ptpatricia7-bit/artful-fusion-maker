@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PlanosRouteImport } from './routes/planos'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedCabineRouteImport } from './routes/_authenticated/cabine'
 import { Route as AuthenticatedCofreRouteImport } from './routes/_authenticated/cofre'
 import { Route as AuthenticatedCriadoresRouteImport } from './routes/_authenticated/criadores'
@@ -48,6 +49,11 @@ const FaqRoute = FaqRouteImport.update({
 const PlanosRoute = PlanosRouteImport.update({
   id: '/planos',
   path: '/planos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedCabineRoute = AuthenticatedCabineRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/entrar': typeof EntrarRoute
   '/faq': typeof FaqRoute
   '/planos': typeof PlanosRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/cabine': typeof AuthenticatedCabineRoute
   '/cofre': typeof AuthenticatedCofreRoute
   '/criadores': typeof AuthenticatedCriadoresRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/entrar': typeof EntrarRoute
   '/faq': typeof FaqRoute
   '/planos': typeof PlanosRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/cabine': typeof AuthenticatedCabineRoute
   '/cofre': typeof AuthenticatedCofreRoute
   '/criadores': typeof AuthenticatedCriadoresRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/entrar': typeof EntrarRoute
   '/faq': typeof FaqRoute
   '/planos': typeof PlanosRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/cabine': typeof AuthenticatedCabineRoute
   '/_authenticated/cofre': typeof AuthenticatedCofreRoute
   '/_authenticated/criadores': typeof AuthenticatedCriadoresRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/faq'
     | '/planos'
+    | '/reset-password'
     | '/cabine'
     | '/cofre'
     | '/criadores'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/faq'
     | '/planos'
+    | '/reset-password'
     | '/cabine'
     | '/cofre'
     | '/criadores'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/entrar'
     | '/faq'
     | '/planos'
+    | '/reset-password'
     | '/_authenticated/cabine'
     | '/_authenticated/cofre'
     | '/_authenticated/criadores'
@@ -221,6 +233,7 @@ export interface RootRouteChildren {
   EntrarRoute: typeof EntrarRoute
   FaqRoute: typeof FaqRoute
   PlanosRoute: typeof PlanosRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -258,6 +271,13 @@ declare module '@tanstack/react-router' {
       path: '/planos'
       fullPath: '/planos'
       preLoaderRoute: typeof PlanosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/cabine': {
@@ -377,6 +397,7 @@ const rootRouteChildren: RootRouteChildren = {
   EntrarRoute: EntrarRoute,
   FaqRoute: FaqRoute,
   PlanosRoute: PlanosRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
