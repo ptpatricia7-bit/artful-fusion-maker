@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { gerarImagemCriativo, gerarTexto } from "@/lib/ai.functions";
 
-export const Route = createFileRoute("/criadores")({
+export const Route = createFileRoute("/_authenticated/criadores")({
   head: () => ({ meta: [
     { title: "Criativos para redes sociais — T@arte" },
     { name: "description", content: "Crie conceitos, textos, legendas e imagens para TikTok, Instagram e YouTube com inteligência artificial." },

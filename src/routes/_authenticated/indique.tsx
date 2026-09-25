@@ -3,7 +3,7 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AppNav } from "@/components/AppNav";
 
-export const Route = createFileRoute("/indique")({
+export const Route = createFileRoute("/_authenticated/indique")({
   head: () => ({
     meta: [
       { title: "Indique e ganhe — T@arte" },

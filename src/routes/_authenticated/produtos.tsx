@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { pesquisarMercado } from "@/lib/ai.functions";
 import { brl, produtos } from "@/lib/tarte-data";
 
-export const Route = createFileRoute("/produtos")({
+export const Route = createFileRoute("/_authenticated/produtos")({
   head: () => ({ meta: [
     { title: "Pesquisa de produtos e criadores — T@arte" },
     { name: "description", content: "Pesquise produtos, serviços e criadores em destaque no TikTok, Instagram e YouTube." },

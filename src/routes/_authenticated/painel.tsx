@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import painelAsset from "@/assets/tarte-roupa.png.asset.json";
 import { produtos, nichos, periodos, videosVirais, brl } from "@/lib/tarte-data";
 
-export const Route = createFileRoute("/painel")({
+export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({
     meta: [
       { title: "Painel de produtos e vídeos do TikTok Shop BR — T@arte" },
