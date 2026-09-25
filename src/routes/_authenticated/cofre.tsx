@@ -6,7 +6,7 @@ import { AppNav } from "@/components/AppNav";
 import { AiResultado } from "@/components/AiResultado";
 import { gerarTexto } from "@/lib/ai.functions";
 
-export const Route = createFileRoute("/cofre")({
+export const Route = createFileRoute("/_authenticated/cofre")({
   head: () => ({
     meta: [
       { title: "Cofre de Prompts — T@arte" },

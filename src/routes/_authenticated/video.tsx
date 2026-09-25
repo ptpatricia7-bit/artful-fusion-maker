@@ -6,7 +6,7 @@ import { AppNav } from "@/components/AppNav";
 import { criarVideo, consultarVideo, gerarTexto } from "@/lib/ai.functions";
 import { produtos } from "@/lib/tarte-data";
 
-export const Route = createFileRoute("/video")({
+export const Route = createFileRoute("/_authenticated/video")({
   head: () => ({
     meta: [
       { title: "Gerador de vídeo com IA — T@arte" },

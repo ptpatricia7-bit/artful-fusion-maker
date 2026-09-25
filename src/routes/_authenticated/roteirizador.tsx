@@ -6,7 +6,7 @@ import { AppNav } from "@/components/AppNav";
 import { AiResultado } from "@/components/AiResultado";
 import { gerarTexto } from "@/lib/ai.functions";
 
-export const Route = createFileRoute("/roteirizador")({
+export const Route = createFileRoute("/_authenticated/roteirizador")({
   head: () => ({
     meta: [
       { title: "Roteirizador de vídeo com IA — T@arte" },

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { consultarVideo, criarVideo, gerarTexto } from "@/lib/ai.functions";
 import { baixarBlob, montarVideo, type ClipeLocal } from "@/lib/video-composer";
 
-export const Route = createFileRoute("/estudio")({
+export const Route = createFileRoute("/_authenticated/estudio")({
   head: () => ({
     meta: [
       { title: "Multiplicador de vídeos e roteiros — T@arte" },

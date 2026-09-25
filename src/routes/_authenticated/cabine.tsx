@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { gerarImagemEstudio } from "@/lib/ai.functions";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/cabine")({
+export const Route = createFileRoute("/_authenticated/cabine")({
   head: () => ({
     meta: [
       { title: "Estúdio visual com IA — T@arte" },

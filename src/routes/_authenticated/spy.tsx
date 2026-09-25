@@ -6,7 +6,7 @@ import { AppNav } from "@/components/AppNav";
 import { AiResultado } from "@/components/AiResultado";
 import { gerarTexto } from "@/lib/ai.functions";
 
-export const Route = createFileRoute("/spy")({
+export const Route = createFileRoute("/_authenticated/spy")({
   head: () => ({
     meta: [
       { title: "GeraSpy ADS — espie os anúncios que vendem — T@arte" },

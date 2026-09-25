@@ -6,7 +6,7 @@ import { AppNav } from "@/components/AppNav";
 import { criarVideo, consultarVideo, gerarTexto } from "@/lib/ai.functions";
 import { produtos } from "@/lib/tarte-data";
 
-export const Route = createFileRoute("/gravar")({
+export const Route = createFileRoute("/_authenticated/gravar")({
   head: () => ({
     meta: [
       { title: "Gravar e postar seu vídeo — T@arte" },

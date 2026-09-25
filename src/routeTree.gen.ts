@@ -10,39 +10,29 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CabineRouteImport } from './routes/cabine'
-import { Route as CofreRouteImport } from './routes/cofre'
-import { Route as CriadoresRouteImport } from './routes/criadores'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as EntrarRouteImport } from './routes/entrar'
-import { Route as EstudioRouteImport } from './routes/estudio'
 import { Route as FaqRouteImport } from './routes/faq'
-import { Route as GravarRouteImport } from './routes/gravar'
-import { Route as IndiqueRouteImport } from './routes/indique'
-import { Route as PainelRouteImport } from './routes/painel'
 import { Route as PlanosRouteImport } from './routes/planos'
-import { Route as ProdutosRouteImport } from './routes/produtos'
-import { Route as RoteirizadorRouteImport } from './routes/roteirizador'
-import { Route as SpyRouteImport } from './routes/spy'
-import { Route as VideoRouteImport } from './routes/video'
+import { Route as AuthenticatedCabineRouteImport } from './routes/_authenticated/cabine'
+import { Route as AuthenticatedCofreRouteImport } from './routes/_authenticated/cofre'
+import { Route as AuthenticatedCriadoresRouteImport } from './routes/_authenticated/criadores'
+import { Route as AuthenticatedEstudioRouteImport } from './routes/_authenticated/estudio'
+import { Route as AuthenticatedGravarRouteImport } from './routes/_authenticated/gravar'
+import { Route as AuthenticatedIndiqueRouteImport } from './routes/_authenticated/indique'
+import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
+import { Route as AuthenticatedRoteirizadorRouteImport } from './routes/_authenticated/roteirizador'
+import { Route as AuthenticatedSpyRouteImport } from './routes/_authenticated/spy'
+import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CabineRoute = CabineRouteImport.update({
-  id: '/cabine',
-  path: '/cabine',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CofreRoute = CofreRouteImport.update({
-  id: '/cofre',
-  path: '/cofre',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CriadoresRoute = CriadoresRouteImport.update({
-  id: '/criadores',
-  path: '/criadores',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EntrarRoute = EntrarRouteImport.update({
@@ -50,29 +40,9 @@ const EntrarRoute = EntrarRouteImport.update({
   path: '/entrar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EstudioRoute = EstudioRouteImport.update({
-  id: '/estudio',
-  path: '/estudio',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GravarRoute = GravarRouteImport.update({
-  id: '/gravar',
-  path: '/gravar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndiqueRoute = IndiqueRouteImport.update({
-  id: '/indique',
-  path: '/indique',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PainelRoute = PainelRouteImport.update({
-  id: '/painel',
-  path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanosRoute = PlanosRouteImport.update({
@@ -80,93 +50,130 @@ const PlanosRoute = PlanosRouteImport.update({
   path: '/planos',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProdutosRoute = ProdutosRouteImport.update({
+const AuthenticatedCabineRoute = AuthenticatedCabineRouteImport.update({
+  id: '/cabine',
+  path: '/cabine',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCofreRoute = AuthenticatedCofreRouteImport.update({
+  id: '/cofre',
+  path: '/cofre',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCriadoresRoute = AuthenticatedCriadoresRouteImport.update({
+  id: '/criadores',
+  path: '/criadores',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEstudioRoute = AuthenticatedEstudioRouteImport.update({
+  id: '/estudio',
+  path: '/estudio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGravarRoute = AuthenticatedGravarRouteImport.update({
+  id: '/gravar',
+  path: '/gravar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedIndiqueRoute = AuthenticatedIndiqueRouteImport.update({
+  id: '/indique',
+  path: '/indique',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   id: '/produtos',
   path: '/produtos',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const RoteirizadorRoute = RoteirizadorRouteImport.update({
-  id: '/roteirizador',
-  path: '/roteirizador',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SpyRoute = SpyRouteImport.update({
+const AuthenticatedRoteirizadorRoute =
+  AuthenticatedRoteirizadorRouteImport.update({
+    id: '/roteirizador',
+    path: '/roteirizador',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSpyRoute = AuthenticatedSpyRouteImport.update({
   id: '/spy',
   path: '/spy',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const VideoRoute = VideoRouteImport.update({
+const AuthenticatedVideoRoute = AuthenticatedVideoRouteImport.update({
   id: '/video',
   path: '/video',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/cabine': typeof CabineRoute
-  '/cofre': typeof CofreRoute
-  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
-  '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
-  '/gravar': typeof GravarRoute
-  '/indique': typeof IndiqueRoute
-  '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
-  '/produtos': typeof ProdutosRoute
-  '/roteirizador': typeof RoteirizadorRoute
-  '/spy': typeof SpyRoute
-  '/video': typeof VideoRoute
+  '/cabine': typeof AuthenticatedCabineRoute
+  '/cofre': typeof AuthenticatedCofreRoute
+  '/criadores': typeof AuthenticatedCriadoresRoute
+  '/estudio': typeof AuthenticatedEstudioRoute
+  '/gravar': typeof AuthenticatedGravarRoute
+  '/indique': typeof AuthenticatedIndiqueRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/produtos': typeof AuthenticatedProdutosRoute
+  '/roteirizador': typeof AuthenticatedRoteirizadorRoute
+  '/spy': typeof AuthenticatedSpyRoute
+  '/video': typeof AuthenticatedVideoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/cabine': typeof CabineRoute
-  '/cofre': typeof CofreRoute
-  '/criadores': typeof CriadoresRoute
   '/entrar': typeof EntrarRoute
-  '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
-  '/gravar': typeof GravarRoute
-  '/indique': typeof IndiqueRoute
-  '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
-  '/produtos': typeof ProdutosRoute
-  '/roteirizador': typeof RoteirizadorRoute
-  '/spy': typeof SpyRoute
-  '/video': typeof VideoRoute
+  '/cabine': typeof AuthenticatedCabineRoute
+  '/cofre': typeof AuthenticatedCofreRoute
+  '/criadores': typeof AuthenticatedCriadoresRoute
+  '/estudio': typeof AuthenticatedEstudioRoute
+  '/gravar': typeof AuthenticatedGravarRoute
+  '/indique': typeof AuthenticatedIndiqueRoute
+  '/painel': typeof AuthenticatedPainelRoute
+  '/produtos': typeof AuthenticatedProdutosRoute
+  '/roteirizador': typeof AuthenticatedRoteirizadorRoute
+  '/spy': typeof AuthenticatedSpyRoute
+  '/video': typeof AuthenticatedVideoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/cabine': typeof CabineRoute
-  '/cofre': typeof CofreRoute
-  '/criadores': typeof CriadoresRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/entrar': typeof EntrarRoute
-  '/estudio': typeof EstudioRoute
   '/faq': typeof FaqRoute
-  '/gravar': typeof GravarRoute
-  '/indique': typeof IndiqueRoute
-  '/painel': typeof PainelRoute
   '/planos': typeof PlanosRoute
-  '/produtos': typeof ProdutosRoute
-  '/roteirizador': typeof RoteirizadorRoute
-  '/spy': typeof SpyRoute
-  '/video': typeof VideoRoute
+  '/_authenticated/cabine': typeof AuthenticatedCabineRoute
+  '/_authenticated/cofre': typeof AuthenticatedCofreRoute
+  '/_authenticated/criadores': typeof AuthenticatedCriadoresRoute
+  '/_authenticated/estudio': typeof AuthenticatedEstudioRoute
+  '/_authenticated/gravar': typeof AuthenticatedGravarRoute
+  '/_authenticated/indique': typeof AuthenticatedIndiqueRoute
+  '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
+  '/_authenticated/roteirizador': typeof AuthenticatedRoteirizadorRoute
+  '/_authenticated/spy': typeof AuthenticatedSpyRoute
+  '/_authenticated/video': typeof AuthenticatedVideoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/entrar'
+    | '/faq'
+    | '/planos'
     | '/cabine'
     | '/cofre'
     | '/criadores'
-    | '/entrar'
     | '/estudio'
-    | '/faq'
     | '/gravar'
     | '/indique'
     | '/painel'
-    | '/planos'
     | '/produtos'
     | '/roteirizador'
     | '/spy'
@@ -174,16 +181,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/entrar'
+    | '/faq'
+    | '/planos'
     | '/cabine'
     | '/cofre'
     | '/criadores'
-    | '/entrar'
     | '/estudio'
-    | '/faq'
     | '/gravar'
     | '/indique'
     | '/painel'
-    | '/planos'
     | '/produtos'
     | '/roteirizador'
     | '/spy'
@@ -191,38 +198,29 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/cabine'
-    | '/cofre'
-    | '/criadores'
+    | '/_authenticated'
     | '/entrar'
-    | '/estudio'
     | '/faq'
-    | '/gravar'
-    | '/indique'
-    | '/painel'
     | '/planos'
-    | '/produtos'
-    | '/roteirizador'
-    | '/spy'
-    | '/video'
+    | '/_authenticated/cabine'
+    | '/_authenticated/cofre'
+    | '/_authenticated/criadores'
+    | '/_authenticated/estudio'
+    | '/_authenticated/gravar'
+    | '/_authenticated/indique'
+    | '/_authenticated/painel'
+    | '/_authenticated/produtos'
+    | '/_authenticated/roteirizador'
+    | '/_authenticated/spy'
+    | '/_authenticated/video'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CabineRoute: typeof CabineRoute
-  CofreRoute: typeof CofreRoute
-  CriadoresRoute: typeof CriadoresRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   EntrarRoute: typeof EntrarRoute
-  EstudioRoute: typeof EstudioRoute
   FaqRoute: typeof FaqRoute
-  GravarRoute: typeof GravarRoute
-  IndiqueRoute: typeof IndiqueRoute
-  PainelRoute: typeof PainelRoute
   PlanosRoute: typeof PlanosRoute
-  ProdutosRoute: typeof ProdutosRoute
-  RoteirizadorRoute: typeof RoteirizadorRoute
-  SpyRoute: typeof SpyRoute
-  VideoRoute: typeof VideoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -234,25 +232,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/cabine': {
-      id: '/cabine'
-      path: '/cabine'
-      fullPath: '/cabine'
-      preLoaderRoute: typeof CabineRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cofre': {
-      id: '/cofre'
-      path: '/cofre'
-      fullPath: '/cofre'
-      preLoaderRoute: typeof CofreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/criadores': {
-      id: '/criadores'
-      path: '/criadores'
-      fullPath: '/criadores'
-      preLoaderRoute: typeof CriadoresRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/entrar': {
@@ -262,39 +246,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EntrarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/estudio': {
-      id: '/estudio'
-      path: '/estudio'
-      fullPath: '/estudio'
-      preLoaderRoute: typeof EstudioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/faq': {
       id: '/faq'
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/gravar': {
-      id: '/gravar'
-      path: '/gravar'
-      fullPath: '/gravar'
-      preLoaderRoute: typeof GravarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/indique': {
-      id: '/indique'
-      path: '/indique'
-      fullPath: '/indique'
-      preLoaderRoute: typeof IndiqueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/painel': {
-      id: '/painel'
-      path: '/painel'
-      fullPath: '/painel'
-      preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/planos': {
@@ -304,53 +260,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlanosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/produtos': {
-      id: '/produtos'
+    '/_authenticated/cabine': {
+      id: '/_authenticated/cabine'
+      path: '/cabine'
+      fullPath: '/cabine'
+      preLoaderRoute: typeof AuthenticatedCabineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cofre': {
+      id: '/_authenticated/cofre'
+      path: '/cofre'
+      fullPath: '/cofre'
+      preLoaderRoute: typeof AuthenticatedCofreRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/criadores': {
+      id: '/_authenticated/criadores'
+      path: '/criadores'
+      fullPath: '/criadores'
+      preLoaderRoute: typeof AuthenticatedCriadoresRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/estudio': {
+      id: '/_authenticated/estudio'
+      path: '/estudio'
+      fullPath: '/estudio'
+      preLoaderRoute: typeof AuthenticatedEstudioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/gravar': {
+      id: '/_authenticated/gravar'
+      path: '/gravar'
+      fullPath: '/gravar'
+      preLoaderRoute: typeof AuthenticatedGravarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/indique': {
+      id: '/_authenticated/indique'
+      path: '/indique'
+      fullPath: '/indique'
+      preLoaderRoute: typeof AuthenticatedIndiqueRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/painel': {
+      id: '/_authenticated/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof AuthenticatedPainelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/produtos': {
+      id: '/_authenticated/produtos'
       path: '/produtos'
       fullPath: '/produtos'
-      preLoaderRoute: typeof ProdutosRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedProdutosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/roteirizador': {
-      id: '/roteirizador'
+    '/_authenticated/roteirizador': {
+      id: '/_authenticated/roteirizador'
       path: '/roteirizador'
       fullPath: '/roteirizador'
-      preLoaderRoute: typeof RoteirizadorRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedRoteirizadorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/spy': {
-      id: '/spy'
+    '/_authenticated/spy': {
+      id: '/_authenticated/spy'
       path: '/spy'
       fullPath: '/spy'
-      preLoaderRoute: typeof SpyRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedSpyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/video': {
-      id: '/video'
+    '/_authenticated/video': {
+      id: '/_authenticated/video'
       path: '/video'
       fullPath: '/video'
-      preLoaderRoute: typeof VideoRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedVideoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCabineRoute: typeof AuthenticatedCabineRoute
+  AuthenticatedCofreRoute: typeof AuthenticatedCofreRoute
+  AuthenticatedCriadoresRoute: typeof AuthenticatedCriadoresRoute
+  AuthenticatedEstudioRoute: typeof AuthenticatedEstudioRoute
+  AuthenticatedGravarRoute: typeof AuthenticatedGravarRoute
+  AuthenticatedIndiqueRoute: typeof AuthenticatedIndiqueRoute
+  AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+  AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
+  AuthenticatedRoteirizadorRoute: typeof AuthenticatedRoteirizadorRoute
+  AuthenticatedSpyRoute: typeof AuthenticatedSpyRoute
+  AuthenticatedVideoRoute: typeof AuthenticatedVideoRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCabineRoute: AuthenticatedCabineRoute,
+  AuthenticatedCofreRoute: AuthenticatedCofreRoute,
+  AuthenticatedCriadoresRoute: AuthenticatedCriadoresRoute,
+  AuthenticatedEstudioRoute: AuthenticatedEstudioRoute,
+  AuthenticatedGravarRoute: AuthenticatedGravarRoute,
+  AuthenticatedIndiqueRoute: AuthenticatedIndiqueRoute,
+  AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+  AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
+  AuthenticatedRoteirizadorRoute: AuthenticatedRoteirizadorRoute,
+  AuthenticatedSpyRoute: AuthenticatedSpyRoute,
+  AuthenticatedVideoRoute: AuthenticatedVideoRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CabineRoute: CabineRoute,
-  CofreRoute: CofreRoute,
-  CriadoresRoute: CriadoresRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   EntrarRoute: EntrarRoute,
-  EstudioRoute: EstudioRoute,
   FaqRoute: FaqRoute,
-  GravarRoute: GravarRoute,
-  IndiqueRoute: IndiqueRoute,
-  PainelRoute: PainelRoute,
   PlanosRoute: PlanosRoute,
-  ProdutosRoute: ProdutosRoute,
-  RoteirizadorRoute: RoteirizadorRoute,
-  SpyRoute: SpyRoute,
-  VideoRoute: VideoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
