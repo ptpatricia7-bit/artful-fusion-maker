@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 
-type Search = { redirecionar?: string };
+type Search = { redirecionar?: string | undefined };
 
 export const Route = createFileRoute("/entrar")({
   validateSearch: (search: Record<string, unknown>): Search => ({
-    redirecionar: typeof search.redirecionar === "string" ? search.redirecionar : undefined,
+    redirecionar: typeof search['redirecionar'] === "string" ? search['redirecionar'] : undefined,
   }),
   head: () => ({
     meta: [
