@@ -16,7 +16,7 @@ async function ensureProfile(user: User) {
   if (data) return;
 
   const displayName =
-    typeof user.user_metadata?.display_name === "string" ? user.user_metadata.display_name : "";
+    typeof user.user_metadata?.['display_name'] === "string" ? user.user_metadata['display_name'] : "";
   await supabase.from("profiles").insert({ id: user.id, display_name: displayName });
 }
 

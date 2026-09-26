@@ -28,8 +28,8 @@ export function SiteHeader() {
   };
 
   const displayName =
-    typeof user?.user_metadata?.display_name === "string" && user.user_metadata.display_name.trim()
-      ? user.user_metadata.display_name
+    typeof user?.user_metadata?.['display_name'] === "string" && user.user_metadata['display_name'].trim()
+      ? user.user_metadata['display_name']
       : user?.email?.split("@")[0];
 
   return (
