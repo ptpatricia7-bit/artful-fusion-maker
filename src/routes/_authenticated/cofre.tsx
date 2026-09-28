@@ -123,6 +123,7 @@ function Cofre() {
           pedido: `Crie um prompt reutilizável para: ${pedido}. Entregue o título curto e o texto do prompt completo, com campos entre colchetes quando fizer sentido.`,
         },
       });
+      if (r.erro) { setErro(r.erro); return; }
       setTexto(r.texto);
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não foi possível criar o prompt agora.");

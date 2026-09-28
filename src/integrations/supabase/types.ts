@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_gateway_control: {
+        Row: {
+          id: number
+          paused_at: string
+          paused_message: string
+          paused_reason: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          paused_at?: string
+          paused_message: string
+          paused_reason: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          paused_at?: string
+          paused_message?: string
+          paused_reason?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

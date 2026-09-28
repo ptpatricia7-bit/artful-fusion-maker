@@ -1,0 +1,1 @@
+CREATE POLICY "Only the internal service manages AI pause state" ON public.ai_gateway_control FOR ALL TO service_role USING (true) WITH CHECK (true);

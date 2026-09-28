@@ -37,6 +37,7 @@ function Criativos() {
     setEstado("texto"); setErro(null); setTexto(null);
     try {
       const resposta = await escrever({ data: { sistema: "Você é diretor criativo de redes sociais. Crie material original, específico e pronto para publicar.", pedido: `Crie um criativo para ${rede}, formato ${formato}, objetivo ${objetivo}, divulgando ${produto}. Preferência da pessoa: ${conceito || "defina a melhor direção"}. Entregue conceito visual, título, texto principal, legenda, CTA e hashtags.` } });
+       if (resposta.erro) { setErro(resposta.erro); return; }
       setTexto(resposta.texto);
     } catch (e) { setErro(e instanceof Error ? e.message : "Não foi possível criar o texto."); }
     finally { setEstado("parado"); }

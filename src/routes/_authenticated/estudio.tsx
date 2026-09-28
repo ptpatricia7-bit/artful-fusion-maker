@@ -200,8 +200,9 @@ function RoteiroLivre({ tipo }: { tipo: "roteiro" | "live" }) {
     if (produto.trim().length < 2) { setErro("Digite o produto ou serviço."); return; }
     setCarregando(true); setErro(null); setTexto(null);
     try {
-      const resposta = await gerar({ data: { sistema: tipo === "live" ? "Você cria roteiros completos de live de vendas, com falas prontas, demonstrações, interação e chamadas para ação." : "Você cria roteiros de vídeos curtos para redes sociais, com gancho, corpo, prova e chamada para ação.", pedido: `Crie um roteiro para divulgar ${produto}. Formato: ${tipo === "live" ? "live" : "vídeo curto"}. Duração: ${duracao}. Público: ${publico || "defina o público mais provável"}. Entregue falas prontas para ler.` } });
-      setTexto(resposta.texto);
+       const resposta = await gerar({ data: { sistema: tipo === "live" ? "Você cria roteiros completos de live de vendas, com falas prontas, demonstrações, interação e chamadas para ação." : "Você cria roteiros de vídeos curtos para redes sociais, com gancho, corpo, prova e chamada para ação.", pedido: `Crie um roteiro para divulgar ${produto}. Formato: ${tipo === "live" ? "live" : "vídeo curto"}. Duração: ${duracao}. Público: ${publico || "defina o público mais provável"}. Entregue falas prontas para ler.` } });
+       if (resposta.erro) { setErro(resposta.erro); return; }
+       setTexto(resposta.texto);
     } catch (e) { setErro(e instanceof Error ? e.message : "Não foi possível criar o roteiro."); }
     finally { setCarregando(false); }
   };

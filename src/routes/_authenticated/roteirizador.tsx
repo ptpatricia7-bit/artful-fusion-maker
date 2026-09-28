@@ -58,6 +58,7 @@ function Roteirizador() {
 Estrutura: 3 opções de gancho (0-3s), corpo com marcação de tempo, quebra de objeção, CTA e legenda com hashtags.`,
         },
       });
+      if (r.erro) { setErro(r.erro); return; }
       setTexto(r.texto);
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não foi possível gerar agora.");
