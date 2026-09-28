@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { videosVirais, produtos, brl, faq } from "@/lib/tarte-data";
 
+const painelImageUrl = `https://artful-fusion-maker.lovable.app${painelAsset.url}`;
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -20,7 +22,9 @@ export const Route = createFileRoute("/")({
           "Métricas reais do TikTok Shop Brasil + Multiplicador de Vídeos: grave 18 pedaços, receba 150 vídeos prontos.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: painelImageUrl },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: painelImageUrl },
     ],
   }),
   component: Home,
@@ -128,7 +132,7 @@ function Home() {
 
           <div className="glass relative overflow-hidden rounded-3xl p-2">
             <img
-              src={painelAsset.url}
+              src={painelImageUrl}
               alt="Painel do T@arte com ranking de produtos e métricas do TikTok Shop"
               width={1280}
               height={960}
