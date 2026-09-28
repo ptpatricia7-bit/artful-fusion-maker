@@ -9,6 +9,12 @@ type GatewayErrorBody = {
 
 const ROW_ID = 1;
 
+function displayMessage(message: string) {
+  return message === "Not enough credits"
+    ? "Not enough credits — Os créditos de inteligência artificial acabaram. Adicione créditos para continuar."
+    : message;
+}
+
 export async function pausedAiMessage(): Promise<string | null> {
   const { data, error } = await supabaseAdmin
     .from("ai_gateway_control")
@@ -16,7 +22,7 @@ export async function pausedAiMessage(): Promise<string | null> {
     .eq("id", ROW_ID)
     .maybeSingle();
   if (error) throw new Error("Não foi possível verificar a disponibilidade da inteligência artificial.");
-  return data?.paused_message ?? null;
+  return data?.paused_message ? displayMessage(data.paused_message) : null;
 }
 
 export async function gatewayError(res: Response): Promise<string> {
@@ -44,5 +50,5 @@ export async function gatewayError(res: Response): Promise<string> {
     });
     if (error) console.error("Failed to persist AI pause state", error);
   }
-  return message;
+  return displayMessage(message);
 }
