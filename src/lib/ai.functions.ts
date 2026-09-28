@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { gatewayError, pausedAiMessage } from "@/lib/ai-control.server";
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1";
 
@@ -14,20 +15,6 @@ function validarTexto(data: unknown): TextoInput {
     sistema: typeof d.sistema === "string" ? d.sistema.slice(0, 4000) : "",
     pedido: d.pedido.slice(0, 6000),
   };
-}
-
-async function erroAmigavel(res: Response) {
-  const corpo = (await res.json().catch(() => null)) as { message?: string } | null;
-  if (res.status === 402) {
-    return "Os créditos de inteligência artificial acabaram. Adicione créditos para continuar.";
-  }
-  if (res.status === 429) {
-    return "Muitos pedidos ao mesmo tempo. Espere alguns segundos e tente de novo.";
-  }
-  if (res.status === 403) {
-    return corpo?.message ?? "A inteligência artificial está bloqueada nas configurações do espaço de trabalho.";
-  }
-  return corpo?.message ?? "A inteligência artificial não respondeu agora. Tente novamente.";
 }
 
 async function lerRespostaEmFluxo(res: Response) {
@@ -66,8 +53,10 @@ export const gerarTexto = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(validarTexto)
   .handler(async ({ data }) => {
+    const paused = await pausedAiMessage();
+    if (paused) return { texto: "", erro: paused };
     const key = process.env["LOVABLE_API_KEY"];
-    if (!key) throw new Error("A inteligência artificial não está configurada.");
+    if (!key) return { texto: "", erro: "A inteligência artificial não está configurada." };
 
     const res = await fetch(`${GATEWAY}/responses`, {
       method: "POST",
@@ -85,10 +74,10 @@ export const gerarTexto = createServerFn({ method: "POST" })
       }),
     });
 
-    if (!res.ok) throw new Error(await erroAmigavel(res));
+    if (!res.ok) return { texto: "", erro: await gatewayError(res) };
 
     const texto = await lerRespostaEmFluxo(res);
-    if (!texto) throw new Error("A inteligência artificial devolveu uma resposta vazia.");
+    if (!texto) return { texto: "", erro: "A inteligência artificial devolveu uma resposta vazia." };
     return { texto };
   });
 
@@ -160,6 +149,8 @@ export const gerarImagemEstudio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(validarImagemEstudio)
   .handler(async ({ data }) => {
+    const paused = await pausedAiMessage();
+    if (paused) throw new Error(paused);
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("A inteligência artificial não está configurada.");
 
@@ -181,7 +172,7 @@ export const gerarImagemEstudio = createServerFn({ method: "POST" })
       }),
     });
 
-    if (!res.ok) throw new Error(await erroAmigavel(res));
+    if (!res.ok) throw new Error(await gatewayError(res));
 
     const json = (await res.json()) as { data?: { b64_json?: string }[] };
     const b64 = json.data?.[0]?.b64_json;
@@ -206,6 +197,8 @@ export const gerarImagemCriativo = createServerFn({ method: "POST" })
     };
   })
   .handler(async ({ data }) => {
+    const paused = await pausedAiMessage();
+    if (paused) throw new Error(paused);
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("A inteligência artificial não está configurada.");
     const res = await fetch(`${GATEWAY}/images/generations`, {
@@ -216,7 +209,7 @@ export const gerarImagemCriativo = createServerFn({ method: "POST" })
         prompt: `Crie uma imagem publicitária profissional para ${data.rede}, formato ${data.formato}, divulgando ${data.produto}. ${data.conceito}. Sem logotipos inventados e sem textos ilegíveis. Composição pronta para redes sociais.`,
       }),
     });
-    if (!res.ok) throw new Error(await erroAmigavel(res));
+    if (!res.ok) throw new Error(await gatewayError(res));
     const json = (await res.json()) as { data?: { b64_json?: string; url?: string }[] };
     const item = json.data?.[0];
     const imagem = item?.b64_json ? `data:image/png;base64,${item.b64_json}` : item?.url;
@@ -239,6 +232,8 @@ export const pesquisarMercado = createServerFn({ method: "POST" })
     return { termo: d.termo.slice(0, 300), plataforma };
   })
   .handler(async ({ data }) => {
+    const paused = await pausedAiMessage();
+    if (paused) throw new Error(paused);
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("A inteligência artificial não está configurada.");
     const res = await fetch(`${GATEWAY}/responses`, {
@@ -264,7 +259,7 @@ export const pesquisarMercado = createServerFn({ method: "POST" })
         store: false,
       }),
     });
-    if (!res.ok) throw new Error(await erroAmigavel(res));
+    if (!res.ok) throw new Error(await gatewayError(res));
     const texto = await lerRespostaEmFluxo(res);
     if (!texto) throw new Error("A pesquisa não encontrou informações suficientes.");
     return { texto };
@@ -290,6 +285,8 @@ export const criarVideo = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(validarVideo)
   .handler(async ({ data }) => {
+    const paused = await pausedAiMessage();
+    if (paused) throw new Error(paused);
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("A inteligência artificial não está configurada.");
 
@@ -315,7 +312,7 @@ export const criarVideo = createServerFn({ method: "POST" })
       }),
     });
 
-    if (!res.ok) throw new Error(await erroAmigavel(res));
+    if (!res.ok) throw new Error(await gatewayError(res));
     const json = (await res.json()) as { id?: string };
     if (!json.id) throw new Error("Não foi possível iniciar a criação do vídeo.");
     return { id: json.id };
@@ -330,13 +327,15 @@ export const consultarVideo = createServerFn({ method: "POST" })
     return { id: d.id };
   })
   .handler(async ({ data }) => {
+    const paused = await pausedAiMessage();
+    if (paused) throw new Error(paused);
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("A inteligência artificial não está configurada.");
 
     const res = await fetch(`${GATEWAY}/videos/${data.id}`, {
       headers: { Authorization: `Bearer ${key}` },
     });
-    if (!res.ok) throw new Error(await erroAmigavel(res));
+    if (!res.ok) throw new Error(await gatewayError(res));
     const job = (await res.json()) as {
       status?: string;
       progress?: number;
@@ -353,7 +352,7 @@ export const consultarVideo = createServerFn({ method: "POST" })
     const arquivo = await fetch(`${GATEWAY}/videos/${data.id}/content`, {
       headers: { Authorization: `Bearer ${key}` },
     });
-    if (!arquivo.ok) throw new Error("O vídeo ficou pronto, mas não pôde ser baixado.");
+    if (!arquivo.ok) throw new Error(await gatewayError(arquivo));
     const bytes = new Uint8Array(await arquivo.arrayBuffer());
     let bin = "";
     for (let i = 0; i < bytes.length; i += 8192) {
