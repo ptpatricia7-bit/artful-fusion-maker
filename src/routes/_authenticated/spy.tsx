@@ -69,6 +69,7 @@ function Spy() {
 Primeiro explique em 3 linhas por que ele está vendendo. Depois: ${pedido}`,
         },
       });
+      if (r.erro) { setErro(r.erro); return; }
       setTexto(r.texto);
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não foi possível analisar agora.");

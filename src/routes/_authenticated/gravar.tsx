@@ -258,6 +258,7 @@ function ModoCamera() {
           } para TikTok Shop. Comece com um gancho forte, mostre o benefício, quebre a objeção de preço e termine chamando para clicar no carrinho.`,
         },
       });
+      if (r.erro) { setErro(r.erro); return; }
       setTexto(r.texto);
       if (prompterRef.current) prompterRef.current.scrollTop = 0;
     } catch (e) {
@@ -431,6 +432,7 @@ function ModoAvatar() {
           pedido: `Escreva a fala de abertura de um vídeo vendendo "${produto.nome}" no TikTok Shop.`,
         },
       });
+      if (r.erro) { setErro(r.erro); return; }
       setFala(r.texto);
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não foi possível escrever a fala.");

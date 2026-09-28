@@ -63,6 +63,7 @@ function GeradorVideo() {
           pedido: `Descreva uma cena de vídeo vertical de até 8 segundos para vender o produto "${produto.nome}" no TikTok Shop. Um único plano contínuo, sem cortes, com som ambiente descrito.`,
         },
       });
+      if (r.erro) { setErro(r.erro); return; }
       setPedido(r.texto);
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Não foi possível sugerir a cena.");
