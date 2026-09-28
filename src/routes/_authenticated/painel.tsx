@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import painelAsset from "@/assets/tarte-roupa.png.asset.json";
 import { produtos, nichos, periodos, videosVirais, brl } from "@/lib/tarte-data";
 
+const painelImageUrl = `https://artful-fusion-maker.lovable.app${painelAsset.url}`;
+
 export const Route = createFileRoute("/_authenticated/painel")({
   head: () => ({
     meta: [
@@ -19,7 +21,9 @@ export const Route = createFileRoute("/_authenticated/painel")({
         content: "Ranking por período real, filtros por nicho e os vídeos que estão bombando.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: painelImageUrl },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: painelImageUrl },
     ],
   }),
   component: Painel,
@@ -80,7 +84,7 @@ function Painel() {
             Multiplicar vídeos
           </Link>
           </div>
-          <img src={painelAsset.url} alt="Painel visual do T@arte com métricas de redes sociais" className="h-full min-h-56 w-full object-cover" />
+          <img src={painelImageUrl} alt="Painel visual do T@arte com métricas de redes sociais" className="h-full min-h-56 w-full object-cover" />
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
