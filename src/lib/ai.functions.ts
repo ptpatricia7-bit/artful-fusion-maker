@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireAuthenticatedUser } from "@/lib/authenticated-server.middleware";
 import { gatewayError, pausedAiMessage } from "@/lib/ai-control.server";
 
 const GATEWAY = "https://ai.gateway.lovable.dev/v1";
@@ -50,7 +50,7 @@ async function lerRespostaEmFluxo(res: Response) {
 
 /** Gera texto (roteiros, análises, prompts) com a IA integrada. */
 export const gerarTexto = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAuthenticatedUser])
   .inputValidator(validarTexto)
   .handler(async ({ data }) => {
     const paused = await pausedAiMessage();
@@ -146,7 +146,7 @@ function criarPromptEstudio(data: EstudioInput) {
 
 /** Estúdio visual: transforma uma ou duas imagens conforme a ferramenta escolhida. */
 export const gerarImagemEstudio = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAuthenticatedUser])
   .inputValidator(validarImagemEstudio)
   .handler(async ({ data }) => {
     const paused = await pausedAiMessage();
@@ -183,7 +183,7 @@ export const gerarImagemEstudio = createServerFn({ method: "POST" })
 type CriativoInput = { produto: string; rede: string; formato: string; conceito: string };
 
 export const gerarImagemCriativo = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAuthenticatedUser])
   .inputValidator((data: unknown) => {
     const d = data as Partial<CriativoInput>;
     if (!d || typeof d.produto !== "string" || d.produto.trim().length < 2) {
@@ -220,7 +220,7 @@ export const gerarImagemCriativo = createServerFn({ method: "POST" })
 type PesquisaInput = { termo: string; plataforma: string };
 
 export const pesquisarMercado = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAuthenticatedUser])
   .inputValidator((data: unknown) => {
     const d = data as Partial<PesquisaInput>;
     if (!d || typeof d.termo !== "string" || d.termo.trim().length < 2) {
@@ -282,7 +282,7 @@ function validarVideo(data: unknown): VideoInput {
 
 /** Cria o pedido de vídeo com IA e devolve o número do pedido. */
 export const criarVideo = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAuthenticatedUser])
   .inputValidator(validarVideo)
   .handler(async ({ data }) => {
     const paused = await pausedAiMessage();
@@ -320,7 +320,7 @@ export const criarVideo = createServerFn({ method: "POST" })
 
 /** Consulta o pedido de vídeo; quando pronto, devolve o vídeo. */
 export const consultarVideo = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireAuthenticatedUser])
   .inputValidator((data: unknown) => {
     const d = data as { id?: string };
     if (!d || typeof d.id !== "string" || !d.id) throw new Error("Pedido de vídeo inválido.");
