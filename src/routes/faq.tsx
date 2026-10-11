@@ -10,12 +10,12 @@ export const Route = createFileRoute("/faq")({
       {
         name: "description",
         content:
-          "Como funciona o Multiplicador de Vídeos, a etiqueta de originalidade, a atualização dos dados e a garantia de 7 dias.",
+          "Como funciona os roteiros com IA, a atualização dos dados e a garantia de 7 dias.",
       },
       { property: "og:title", content: "Perguntas frequentes — T@arte" },
       {
         property: "og:description",
-        content: "Tudo sobre o painel do TikTok Shop BR e o Multiplicador de Vídeos do T@arte.",
+        content: "Tudo sobre o painel do TikTok Shop BR e os roteiros com IA do T@arte.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

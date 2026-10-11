@@ -81,7 +81,7 @@ function Painel() {
             to="/estudio"
             className="rounded-full bg-gradient-neon px-5 py-2.5 text-sm font-semibold text-primary-foreground"
           >
-            Multiplicar vídeos
+            Criar roteiros com IA
           </Link>
           </div>
           <img src={painelImageUrl} alt="Painel visual do T@arte com métricas de redes sociais" className="h-full min-h-56 w-full object-cover" />
@@ -192,47 +192,7 @@ function Painel() {
               </div>
             </div>
 
-            <div className="glass mt-4 overflow-x-auto rounded-2xl">
-              <table className="w-full min-w-[720px] text-sm">
-                <thead>
-                  <tr className="text-left text-xs tracking-widest text-muted-foreground uppercase">
-                    <th className="px-5 py-3">#</th>
-                    <th className="px-5 py-3">Produto</th>
-                    <th className="px-5 py-3">Faturamento</th>
-                    <th className="px-5 py-3">Vendas</th>
-                    <th className="px-5 py-3">Cresc.</th>
-                    <th className="px-5 py-3">Comissão</th>
-                    <th className="px-5 py-3">Criadores</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lista.map((p, i) => (
-                    <tr key={p.id} className="border-t border-border">
-                      <td className="px-5 py-3 text-muted-foreground">{i + 1}</td>
-                      <td className="px-5 py-3">
-                        <p className="font-medium">{p.nome}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {p.nicho} · R$ {p.preco.toFixed(2).replace(".", ",")} ·{" "}
-                          <span className={tendenciaEstilo[p.tendencia]}>{p.tendencia}</span>
-                        </p>
-                      </td>
-                      <td className="px-5 py-3 font-semibold text-primary">{brl(p.faturamento)}</td>
-                      <td className="px-5 py-3">{p.vendas.toLocaleString("pt-BR")}</td>
-                      <td className="px-5 py-3 text-accent">+{p.crescimento}%</td>
-                      <td className="px-5 py-3">{p.comissao}%</td>
-                      <td className="px-5 py-3">{p.criadores}</td>
-                    </tr>
-                  ))}
-                  {lista.length === 0 && (
-                    <tr className="border-t border-border">
-                      <td colSpan={7} className="px-5 py-8 text-center text-muted-foreground">
-                        Nenhum produto com esses filtros.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+
           </>
         )}
 
