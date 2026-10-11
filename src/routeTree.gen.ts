@@ -25,6 +25,7 @@ import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
 import { Route as AuthenticatedRoteirizadorRouteImport } from './routes/_authenticated/roteirizador'
 import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
+import { Route as ApiAudioRouteImport } from './routes/api/audio'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -106,6 +107,11 @@ const AuthenticatedVideoRoute = AuthenticatedVideoRouteImport.update({
   path: '/video',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiAudioRoute = ApiAudioRouteImport.update({
+  id: '/api/audio',
+  path: '/api/audio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/produtos': typeof AuthenticatedProdutosRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
   '/video': typeof AuthenticatedVideoRoute
+  '/api/audio': typeof ApiAudioRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/produtos': typeof AuthenticatedProdutosRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
   '/video': typeof AuthenticatedVideoRoute
+  '/api/audio': typeof ApiAudioRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
   '/_authenticated/roteirizador': typeof AuthenticatedRoteirizadorRoute
   '/_authenticated/video': typeof AuthenticatedVideoRoute
+  '/api/audio': typeof ApiAudioRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/produtos'
     | '/roteirizador'
     | '/video'
+    | '/api/audio'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/produtos'
     | '/roteirizador'
     | '/video'
+    | '/api/audio'
   id:
     | '__root__'
     | '/'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/_authenticated/produtos'
     | '/_authenticated/roteirizador'
     | '/_authenticated/video'
+    | '/api/audio'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -222,6 +234,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   PlanosRoute: typeof PlanosRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiAudioRoute: typeof ApiAudioRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -338,6 +351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVideoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/audio': {
+      id: '/api/audio'
+      path: '/api/audio'
+      fullPath: '/api/audio'
+      preLoaderRoute: typeof ApiAudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -377,6 +397,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   PlanosRoute: PlanosRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiAudioRoute: ApiAudioRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
