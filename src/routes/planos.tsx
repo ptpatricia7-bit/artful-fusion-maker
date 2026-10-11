@@ -10,12 +10,12 @@ export const Route = createFileRoute("/planos")({
       {
         name: "description",
         content:
-          "Escolha entre mensal, trimestral ou anual e libere o painel do TikTok Shop BR, o Multiplicador de Vídeos e os roteiros com IA.",
+          "Escolha entre mensal, trimestral ou anual e libere o painel do TikTok Shop BR, os roteiros com IA.",
       },
       { property: "og:title", content: "Planos e preços — T@arte" },
       {
         property: "og:description",
-        content: "Acesso completo ao painel e ao Multiplicador de Vídeos. 7 dias de garantia.",
+        content: "Acesso completo ao painel e aos roteiros com IA. 7 dias de garantia.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -32,7 +32,7 @@ function Planos() {
         <div className="mx-auto max-w-6xl px-5 text-center">
           <h1 className="font-display text-4xl font-bold">Escolha seu acesso</h1>
           <p className="mx-auto mt-4 max-w-xl text-[15px] text-muted-foreground">
-            Todos os planos incluem o Multiplicador de Vídeos e o ranking diário do TikTok Shop
+            Todos os planos incluem os roteiros com IA e o painel diário do TikTok Shop
             Brasil. 7 dias de garantia com reembolso de 100%.
           </p>
         </div>

@@ -3,14 +3,18 @@ import { Link } from "@tanstack/react-router";
 const ferramentas = [
   { to: "/painel", label: "Painel" },
   { to: "/produtos", label: "Produtos e vídeos" },
-  { to: "/estudio", label: "Multiplicador" },
+  { to: "/estudio", label: "Estúdio de roteiros" },
   { to: "/roteirizador", label: "Roteirizador IA" },
   { to: "/video", label: "Gerador de vídeo IA" },
   { to: "/gravar", label: "Gravar e postar" },
   { to: "/cabine", label: "Cabine de roupas" },
-  { to: "/spy", label: "GeraSpy ADS" },
   { to: "/criadores", label: "Criativos" },
   { to: "/cofre", label: "Cofre de prompts" },
+  { to: "/paginas", label: "Gerador de Páginas" },
+  { to: "/audio", label: "Gerador de Áudio" },
+  { to: "/produto", label: "Gerador de Produto" },
+  { to: "/banner", label: "Gerador de Banner" },
+  { to: "/quiz", label: "Criador de quiz" },
   { to: "/indique", label: "Indique e ganhe" },
 ] as const;
 

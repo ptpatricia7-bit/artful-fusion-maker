@@ -76,7 +76,6 @@ export const planos = [
     resumo: "Pra testar o método com tudo liberado.",
     itens: [
       "Ranking de TOP produtos do TikTok Shop BR",
-      "Multiplicador de Vídeos até 150 combinações",
       "Vídeos virais com o produto por trás de cada um",
       "Tendências 24h antes de saturar",
       "Atualização diária dos dados",
@@ -116,15 +115,7 @@ export const planos = [
 export const faq = [
   {
     q: "O que exatamente é o T@arte?",
-    a: "É um painel com métricas reais do TikTok Shop Brasil somado a um estúdio que multiplica os seus vídeos. Você vê o que está vendendo agora e transforma 18 gravações curtas em até 150 vídeos prontos pra postar.",
-  },
-  {
-    q: "O TikTok pode me punir por postar vídeos parecidos?",
-    a: "Cada vídeo montado sai com a etiqueta de originalidade, indicando o quanto ele se diferencia dos outros. Você posta primeiro os marcados como Original e deixa os mais parecidos por último — a ordem certa vem pronta.",
-  },
-  {
-    q: "Preciso saber editar vídeo?",
-    a: "Não. Você grava 10 ganchos, 5 corpos e 3 CTAs no celular, arrasta pras três caixas do Estúdio e recebe as combinações montadas.",
+    a: "É um painel do TikTok Shop Brasil com ferramentas de IA para criar roteiros, vídeos e imagens para redes sociais.",
   },
   {
     q: "Com que frequência os dados são atualizados?",
