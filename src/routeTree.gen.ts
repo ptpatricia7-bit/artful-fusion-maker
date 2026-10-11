@@ -15,14 +15,19 @@ import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAudioRouteImport } from './routes/_authenticated/audio'
+import { Route as AuthenticatedBannerRouteImport } from './routes/_authenticated/banner'
 import { Route as AuthenticatedCabineRouteImport } from './routes/_authenticated/cabine'
 import { Route as AuthenticatedCofreRouteImport } from './routes/_authenticated/cofre'
 import { Route as AuthenticatedCriadoresRouteImport } from './routes/_authenticated/criadores'
 import { Route as AuthenticatedEstudioRouteImport } from './routes/_authenticated/estudio'
 import { Route as AuthenticatedGravarRouteImport } from './routes/_authenticated/gravar'
 import { Route as AuthenticatedIndiqueRouteImport } from './routes/_authenticated/indique'
+import { Route as AuthenticatedPaginasRouteImport } from './routes/_authenticated/paginas'
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
+import { Route as AuthenticatedProdutoRouteImport } from './routes/_authenticated/produto'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
+import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedRoteirizadorRouteImport } from './routes/_authenticated/roteirizador'
 import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
 import { Route as ApiAudioRouteImport } from './routes/api/audio'
@@ -56,6 +61,16 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAudioRoute = AuthenticatedAudioRouteImport.update({
+  id: '/audio',
+  path: '/audio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBannerRoute = AuthenticatedBannerRouteImport.update({
+  id: '/banner',
+  path: '/banner',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCabineRoute = AuthenticatedCabineRouteImport.update({
   id: '/cabine',
   path: '/cabine',
@@ -86,14 +101,29 @@ const AuthenticatedIndiqueRoute = AuthenticatedIndiqueRouteImport.update({
   path: '/indique',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPaginasRoute = AuthenticatedPaginasRouteImport.update({
+  id: '/paginas',
+  path: '/paginas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPainelRoute = AuthenticatedPainelRouteImport.update({
   id: '/painel',
   path: '/painel',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProdutoRoute = AuthenticatedProdutoRouteImport.update({
+  id: '/produto',
+  path: '/produto',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   id: '/produtos',
   path: '/produtos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedQuizRoute = AuthenticatedQuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedRoteirizadorRoute =
@@ -119,14 +149,19 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/audio': typeof AuthenticatedAudioRoute
+  '/banner': typeof AuthenticatedBannerRoute
   '/cabine': typeof AuthenticatedCabineRoute
   '/cofre': typeof AuthenticatedCofreRoute
   '/criadores': typeof AuthenticatedCriadoresRoute
   '/estudio': typeof AuthenticatedEstudioRoute
   '/gravar': typeof AuthenticatedGravarRoute
   '/indique': typeof AuthenticatedIndiqueRoute
+  '/paginas': typeof AuthenticatedPaginasRoute
   '/painel': typeof AuthenticatedPainelRoute
+  '/produto': typeof AuthenticatedProdutoRoute
   '/produtos': typeof AuthenticatedProdutosRoute
+  '/quiz': typeof AuthenticatedQuizRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
@@ -137,14 +172,19 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/audio': typeof AuthenticatedAudioRoute
+  '/banner': typeof AuthenticatedBannerRoute
   '/cabine': typeof AuthenticatedCabineRoute
   '/cofre': typeof AuthenticatedCofreRoute
   '/criadores': typeof AuthenticatedCriadoresRoute
   '/estudio': typeof AuthenticatedEstudioRoute
   '/gravar': typeof AuthenticatedGravarRoute
   '/indique': typeof AuthenticatedIndiqueRoute
+  '/paginas': typeof AuthenticatedPaginasRoute
   '/painel': typeof AuthenticatedPainelRoute
+  '/produto': typeof AuthenticatedProdutoRoute
   '/produtos': typeof AuthenticatedProdutosRoute
+  '/quiz': typeof AuthenticatedQuizRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
@@ -157,14 +197,19 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/audio': typeof AuthenticatedAudioRoute
+  '/_authenticated/banner': typeof AuthenticatedBannerRoute
   '/_authenticated/cabine': typeof AuthenticatedCabineRoute
   '/_authenticated/cofre': typeof AuthenticatedCofreRoute
   '/_authenticated/criadores': typeof AuthenticatedCriadoresRoute
   '/_authenticated/estudio': typeof AuthenticatedEstudioRoute
   '/_authenticated/gravar': typeof AuthenticatedGravarRoute
   '/_authenticated/indique': typeof AuthenticatedIndiqueRoute
+  '/_authenticated/paginas': typeof AuthenticatedPaginasRoute
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
+  '/_authenticated/produto': typeof AuthenticatedProdutoRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
+  '/_authenticated/quiz': typeof AuthenticatedQuizRoute
   '/_authenticated/roteirizador': typeof AuthenticatedRoteirizadorRoute
   '/_authenticated/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
@@ -177,14 +222,19 @@ export interface FileRouteTypes {
     | '/faq'
     | '/planos'
     | '/reset-password'
+    | '/audio'
+    | '/banner'
     | '/cabine'
     | '/cofre'
     | '/criadores'
     | '/estudio'
     | '/gravar'
     | '/indique'
+    | '/paginas'
     | '/painel'
+    | '/produto'
     | '/produtos'
+    | '/quiz'
     | '/roteirizador'
     | '/video'
     | '/api/audio'
@@ -195,14 +245,19 @@ export interface FileRouteTypes {
     | '/faq'
     | '/planos'
     | '/reset-password'
+    | '/audio'
+    | '/banner'
     | '/cabine'
     | '/cofre'
     | '/criadores'
     | '/estudio'
     | '/gravar'
     | '/indique'
+    | '/paginas'
     | '/painel'
+    | '/produto'
     | '/produtos'
+    | '/quiz'
     | '/roteirizador'
     | '/video'
     | '/api/audio'
@@ -214,14 +269,19 @@ export interface FileRouteTypes {
     | '/faq'
     | '/planos'
     | '/reset-password'
+    | '/_authenticated/audio'
+    | '/_authenticated/banner'
     | '/_authenticated/cabine'
     | '/_authenticated/cofre'
     | '/_authenticated/criadores'
     | '/_authenticated/estudio'
     | '/_authenticated/gravar'
     | '/_authenticated/indique'
+    | '/_authenticated/paginas'
     | '/_authenticated/painel'
+    | '/_authenticated/produto'
     | '/_authenticated/produtos'
+    | '/_authenticated/quiz'
     | '/_authenticated/roteirizador'
     | '/_authenticated/video'
     | '/api/audio'
@@ -281,6 +341,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/audio': {
+      id: '/_authenticated/audio'
+      path: '/audio'
+      fullPath: '/audio'
+      preLoaderRoute: typeof AuthenticatedAudioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/banner': {
+      id: '/_authenticated/banner'
+      path: '/banner'
+      fullPath: '/banner'
+      preLoaderRoute: typeof AuthenticatedBannerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/cabine': {
       id: '/_authenticated/cabine'
       path: '/cabine'
@@ -323,6 +397,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndiqueRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/paginas': {
+      id: '/_authenticated/paginas'
+      path: '/paginas'
+      fullPath: '/paginas'
+      preLoaderRoute: typeof AuthenticatedPaginasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/painel': {
       id: '/_authenticated/painel'
       path: '/painel'
@@ -330,11 +411,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPainelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/produto': {
+      id: '/_authenticated/produto'
+      path: '/produto'
+      fullPath: '/produto'
+      preLoaderRoute: typeof AuthenticatedProdutoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/produtos': {
       id: '/_authenticated/produtos'
       path: '/produtos'
       fullPath: '/produtos'
       preLoaderRoute: typeof AuthenticatedProdutosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/quiz': {
+      id: '/_authenticated/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof AuthenticatedQuizRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/roteirizador': {
@@ -362,27 +457,37 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAudioRoute: typeof AuthenticatedAudioRoute
+  AuthenticatedBannerRoute: typeof AuthenticatedBannerRoute
   AuthenticatedCabineRoute: typeof AuthenticatedCabineRoute
   AuthenticatedCofreRoute: typeof AuthenticatedCofreRoute
   AuthenticatedCriadoresRoute: typeof AuthenticatedCriadoresRoute
   AuthenticatedEstudioRoute: typeof AuthenticatedEstudioRoute
   AuthenticatedGravarRoute: typeof AuthenticatedGravarRoute
   AuthenticatedIndiqueRoute: typeof AuthenticatedIndiqueRoute
+  AuthenticatedPaginasRoute: typeof AuthenticatedPaginasRoute
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
+  AuthenticatedProdutoRoute: typeof AuthenticatedProdutoRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
+  AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
   AuthenticatedRoteirizadorRoute: typeof AuthenticatedRoteirizadorRoute
   AuthenticatedVideoRoute: typeof AuthenticatedVideoRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAudioRoute: AuthenticatedAudioRoute,
+  AuthenticatedBannerRoute: AuthenticatedBannerRoute,
   AuthenticatedCabineRoute: AuthenticatedCabineRoute,
   AuthenticatedCofreRoute: AuthenticatedCofreRoute,
   AuthenticatedCriadoresRoute: AuthenticatedCriadoresRoute,
   AuthenticatedEstudioRoute: AuthenticatedEstudioRoute,
   AuthenticatedGravarRoute: AuthenticatedGravarRoute,
   AuthenticatedIndiqueRoute: AuthenticatedIndiqueRoute,
+  AuthenticatedPaginasRoute: AuthenticatedPaginasRoute,
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
+  AuthenticatedProdutoRoute: AuthenticatedProdutoRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
+  AuthenticatedQuizRoute: AuthenticatedQuizRoute,
   AuthenticatedRoteirizadorRoute: AuthenticatedRoteirizadorRoute,
   AuthenticatedVideoRoute: AuthenticatedVideoRoute,
 }
