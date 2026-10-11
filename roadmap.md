@@ -19,3 +19,9 @@
 - [x] Roteiros livres para produto ou serviço, incluindo live
 - [x] Pesquisa assistida de produtos e criadores em TikTok, Instagram e YouTube
 - [x] Nova imagem do Painel
+
+## Alterações solicitadas
+- [ ] Remover GeraSpy, ranking do Painel e Multiplicador, mantendo o restante
+- [ ] Atualizar textos solicitados da página inicial
+- [ ] Adicionar Páginas, Áudio, Produto, Banner e Quiz para gerar e baixar
+- [ ] Verificar navegação, downloads e estados de IA
