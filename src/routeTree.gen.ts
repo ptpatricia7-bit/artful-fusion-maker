@@ -24,7 +24,6 @@ import { Route as AuthenticatedIndiqueRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPainelRouteImport } from './routes/_authenticated/painel'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
 import { Route as AuthenticatedRoteirizadorRouteImport } from './routes/_authenticated/roteirizador'
-import { Route as AuthenticatedSpyRouteImport } from './routes/_authenticated/spy'
 import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
 
 const IndexRoute = IndexRouteImport.update({
@@ -102,11 +101,6 @@ const AuthenticatedRoteirizadorRoute =
     path: '/roteirizador',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSpyRoute = AuthenticatedSpyRouteImport.update({
-  id: '/spy',
-  path: '/spy',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedVideoRoute = AuthenticatedVideoRouteImport.update({
   id: '/video',
   path: '/video',
@@ -128,7 +122,6 @@ export interface FileRoutesByFullPath {
   '/painel': typeof AuthenticatedPainelRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
-  '/spy': typeof AuthenticatedSpyRoute
   '/video': typeof AuthenticatedVideoRoute
 }
 export interface FileRoutesByTo {
@@ -146,7 +139,6 @@ export interface FileRoutesByTo {
   '/painel': typeof AuthenticatedPainelRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
-  '/spy': typeof AuthenticatedSpyRoute
   '/video': typeof AuthenticatedVideoRoute
 }
 export interface FileRoutesById {
@@ -166,7 +158,6 @@ export interface FileRoutesById {
   '/_authenticated/painel': typeof AuthenticatedPainelRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
   '/_authenticated/roteirizador': typeof AuthenticatedRoteirizadorRoute
-  '/_authenticated/spy': typeof AuthenticatedSpyRoute
   '/_authenticated/video': typeof AuthenticatedVideoRoute
 }
 export interface FileRouteTypes {
@@ -186,7 +177,6 @@ export interface FileRouteTypes {
     | '/painel'
     | '/produtos'
     | '/roteirizador'
-    | '/spy'
     | '/video'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -204,7 +194,6 @@ export interface FileRouteTypes {
     | '/painel'
     | '/produtos'
     | '/roteirizador'
-    | '/spy'
     | '/video'
   id:
     | '__root__'
@@ -223,7 +212,6 @@ export interface FileRouteTypes {
     | '/_authenticated/painel'
     | '/_authenticated/produtos'
     | '/_authenticated/roteirizador'
-    | '/_authenticated/spy'
     | '/_authenticated/video'
   fileRoutesById: FileRoutesById
 }
@@ -343,13 +331,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoteirizadorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/spy': {
-      id: '/_authenticated/spy'
-      path: '/spy'
-      fullPath: '/spy'
-      preLoaderRoute: typeof AuthenticatedSpyRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/video': {
       id: '/_authenticated/video'
       path: '/video'
@@ -370,7 +351,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPainelRoute: typeof AuthenticatedPainelRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
   AuthenticatedRoteirizadorRoute: typeof AuthenticatedRoteirizadorRoute
-  AuthenticatedSpyRoute: typeof AuthenticatedSpyRoute
   AuthenticatedVideoRoute: typeof AuthenticatedVideoRoute
 }
 
@@ -384,7 +364,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPainelRoute: AuthenticatedPainelRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
   AuthenticatedRoteirizadorRoute: AuthenticatedRoteirizadorRoute,
-  AuthenticatedSpyRoute: AuthenticatedSpyRoute,
   AuthenticatedVideoRoute: AuthenticatedVideoRoute,
 }
 
