@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, CheckCheck, Download, MessageCircle, Mic, Moon, Paperclip, Plus, Share2, Smile, Sparkles, Sun, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,7 @@ export function ConversationGenerator() {
   const [downloading, setDownloading] = useState(false);
   const [error, setError] = useState("");
   const previews = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => { setPrepared(null); setNotice(""); }, [messages, name, photo, ownName, ownPhoto, group, light, count, prints]);
   const readPhoto = (file: File | undefined, save: (url: string) => void) => {
     if (!file) return;
     if (!["image/png", "image/jpeg", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
