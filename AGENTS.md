@@ -26,3 +26,4 @@
 ## Download generators
 - Keep download-only generators in a shared GeneratorTool with per-tool protected leaf routes; this preserves consistent controls without publishing generated content.
 - Deliver synthesized audio through an authenticated raw server route with the shared AI pause check; this keeps binary audio outside RPC serialization and prevents blocked charges.
+- Render conversation mockups locally and export the preview with an embedded simulation label; this keeps editable images usable without AI credits and prevents unlabeled fictitious evidence.
