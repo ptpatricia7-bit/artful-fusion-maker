@@ -19,6 +19,7 @@ import { Route as AuthenticatedAudioRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedBannerRouteImport } from './routes/_authenticated/banner'
 import { Route as AuthenticatedCabineRouteImport } from './routes/_authenticated/cabine'
 import { Route as AuthenticatedCofreRouteImport } from './routes/_authenticated/cofre'
+import { Route as AuthenticatedConversasRouteImport } from './routes/_authenticated/conversas'
 import { Route as AuthenticatedCriadoresRouteImport } from './routes/_authenticated/criadores'
 import { Route as AuthenticatedEstudioRouteImport } from './routes/_authenticated/estudio'
 import { Route as AuthenticatedGravarRouteImport } from './routes/_authenticated/gravar'
@@ -79,6 +80,11 @@ const AuthenticatedCabineRoute = AuthenticatedCabineRouteImport.update({
 const AuthenticatedCofreRoute = AuthenticatedCofreRouteImport.update({
   id: '/cofre',
   path: '/cofre',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConversasRoute = AuthenticatedConversasRouteImport.update({
+  id: '/conversas',
+  path: '/conversas',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCriadoresRoute = AuthenticatedCriadoresRouteImport.update({
@@ -153,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/banner': typeof AuthenticatedBannerRoute
   '/cabine': typeof AuthenticatedCabineRoute
   '/cofre': typeof AuthenticatedCofreRoute
+  '/conversas': typeof AuthenticatedConversasRoute
   '/criadores': typeof AuthenticatedCriadoresRoute
   '/estudio': typeof AuthenticatedEstudioRoute
   '/gravar': typeof AuthenticatedGravarRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/banner': typeof AuthenticatedBannerRoute
   '/cabine': typeof AuthenticatedCabineRoute
   '/cofre': typeof AuthenticatedCofreRoute
+  '/conversas': typeof AuthenticatedConversasRoute
   '/criadores': typeof AuthenticatedCriadoresRoute
   '/estudio': typeof AuthenticatedEstudioRoute
   '/gravar': typeof AuthenticatedGravarRoute
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/_authenticated/banner': typeof AuthenticatedBannerRoute
   '/_authenticated/cabine': typeof AuthenticatedCabineRoute
   '/_authenticated/cofre': typeof AuthenticatedCofreRoute
+  '/_authenticated/conversas': typeof AuthenticatedConversasRoute
   '/_authenticated/criadores': typeof AuthenticatedCriadoresRoute
   '/_authenticated/estudio': typeof AuthenticatedEstudioRoute
   '/_authenticated/gravar': typeof AuthenticatedGravarRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/banner'
     | '/cabine'
     | '/cofre'
+    | '/conversas'
     | '/criadores'
     | '/estudio'
     | '/gravar'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/banner'
     | '/cabine'
     | '/cofre'
+    | '/conversas'
     | '/criadores'
     | '/estudio'
     | '/gravar'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/_authenticated/banner'
     | '/_authenticated/cabine'
     | '/_authenticated/cofre'
+    | '/_authenticated/conversas'
     | '/_authenticated/criadores'
     | '/_authenticated/estudio'
     | '/_authenticated/gravar'
@@ -369,6 +381,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCofreRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/conversas': {
+      id: '/_authenticated/conversas'
+      path: '/conversas'
+      fullPath: '/conversas'
+      preLoaderRoute: typeof AuthenticatedConversasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/criadores': {
       id: '/_authenticated/criadores'
       path: '/criadores'
@@ -461,6 +480,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBannerRoute: typeof AuthenticatedBannerRoute
   AuthenticatedCabineRoute: typeof AuthenticatedCabineRoute
   AuthenticatedCofreRoute: typeof AuthenticatedCofreRoute
+  AuthenticatedConversasRoute: typeof AuthenticatedConversasRoute
   AuthenticatedCriadoresRoute: typeof AuthenticatedCriadoresRoute
   AuthenticatedEstudioRoute: typeof AuthenticatedEstudioRoute
   AuthenticatedGravarRoute: typeof AuthenticatedGravarRoute
@@ -479,6 +499,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBannerRoute: AuthenticatedBannerRoute,
   AuthenticatedCabineRoute: AuthenticatedCabineRoute,
   AuthenticatedCofreRoute: AuthenticatedCofreRoute,
+  AuthenticatedConversasRoute: AuthenticatedConversasRoute,
   AuthenticatedCriadoresRoute: AuthenticatedCriadoresRoute,
   AuthenticatedEstudioRoute: AuthenticatedEstudioRoute,
   AuthenticatedGravarRoute: AuthenticatedGravarRoute,
