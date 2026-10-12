@@ -147,3 +147,32 @@
 @utility marquee-y-rev {
   animation: marquee-y 44s linear infinite reverse;
 }
+
+.conversation-print {
+  --chat-header: #075e54;
+  --chat-header-text: #ffffff;
+  --chat-bg: #eee8e0;
+  --chat-text: #202c33;
+  --chat-incoming: #ffffff;
+  --chat-outgoing: #d9fdd3;
+  --chat-input: #f6f6f6;
+  --chat-label: #075e54;
+  --chat-label-bg: #e3f1ec;
+  background: var(--chat-bg);
+  color: var(--chat-text);
+}
+.conversation-dark {
+  --chat-header: #202c33;
+  --chat-bg: #0b141a;
+  --chat-text: #e9edef;
+  --chat-incoming: #202c33;
+  --chat-outgoing: #005c4b;
+  --chat-input: #202c33;
+  --chat-label: #b9f5df;
+  --chat-label-bg: #143a32;
+}
+.conversation-header { background: var(--chat-header); color: var(--chat-header-text); }
+.conversation-incoming { background: var(--chat-incoming); }
+.conversation-outgoing { background: var(--chat-outgoing); }
+.conversation-input { background: var(--chat-input); }
+.conversation-watermark { background: var(--chat-label-bg); color: var(--chat-label); }

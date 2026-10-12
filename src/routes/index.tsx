@@ -109,6 +109,7 @@ function Home() {
               { to: "/produto", t: "Gerador de Produto", d: "Crie uma proposta de produto com nome, oferta e descrição." },
               { to: "/banner", t: "Gerador de Banner", d: "Crie imagens publicitárias para suas campanhas." },
               { to: "/quiz", t: "Criador de quiz", d: "Crie e baixe um quiz interativo sobre seu tema." },
+              { to: "/conversas", t: "Gerador de Conversas", d: "Crie imagens de conversas do WhatsApp identificadas como simulação." },
               { to: "/painel", t: "Painel diário", d: "Ranking recalculado toda madrugada com as vendas do dia." },
             ].map((f) => (
               <Link
