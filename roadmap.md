@@ -19,6 +19,7 @@
 - [x] Nova imagem do Painel
 
 ## Alterações solicitadas
+- [ ] Personalizar nomes, fotos e horários e verificar download e compartilhamento das simulações
 - [x] Adicionar Gerador de Conversas do WhatsApp com edição, simulação visível e download de imagens — edição e PNG verificados com login real; IA mantém aviso de créditos
 - [x] Remover GeraSpy, ranking do Painel e Multiplicador, mantendo o restante
 - [x] Atualizar textos solicitados da página inicial
