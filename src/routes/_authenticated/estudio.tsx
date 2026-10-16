@@ -6,7 +6,7 @@ import { AiResultado } from "@/components/AiResultado";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { gerarTexto } from "@/lib/ai.functions";
-import { consultarVideoFal, criarVideoFal } from "@/lib/fal-video.functions";
+import { consultarUsoVideoFal, consultarVideoFal, criarVideoFal } from "@/lib/fal-video.functions";
 
 export const Route = createFileRoute("/_authenticated/estudio")({
   head: () => ({
@@ -45,23 +45,9 @@ function Estudio() {
 }
 
 const LIMITE_VIDEOS_DIA = 3;
-const CHAVE_LIMITE = "tarte-videos-dia";
-
-function lerUsoDiario(): number {
-  try {
-    const salvo = JSON.parse(localStorage.getItem(CHAVE_LIMITE) ?? "{}") as { dia?: string; usados?: number };
-    const hoje = new Date().toDateString();
-    return salvo.dia === hoje && typeof salvo.usados === "number" ? salvo.usados : 0;
-  } catch {
-    return 0;
-  }
-}
-
-function registrarUsoDiario(usados: number) {
-  localStorage.setItem(CHAVE_LIMITE, JSON.stringify({ dia: new Date().toDateString(), usados }));
-}
 
 function VideoComIA() {
+  const consultarUso = useServerFn(consultarUsoVideoFal);
   const criar = useServerFn(criarVideoFal);
   const consultar = useServerFn(consultarVideoFal);
   const [imagem, setImagem] = useState<string | null>(null);
@@ -71,14 +57,31 @@ function VideoComIA() {
   const [video, setVideo] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [usados, setUsados] = useState(0);
+  const [limiteCarregado, setLimiteCarregado] = useState(false);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    setUsados(lerUsoDiario());
+    let ativo = true;
+    const atualizar = async () => {
+      try {
+        const uso = await consultarUso();
+        if (!ativo) return;
+        if (uso.erro || uso.usados === null) {
+          setErro(uso.erro); setLimiteCarregado(false); return;
+        }
+        setUsados(uso.usados); setLimiteCarregado(true);
+      } catch {
+        if (ativo) { setErro("Não foi possível consultar seu limite. Tente novamente."); setLimiteCarregado(false); }
+      }
+    };
+    void atualizar();
+    window.addEventListener("focus", atualizar);
     return () => {
+      ativo = false;
+      window.removeEventListener("focus", atualizar);
       if (timer.current) clearInterval(timer.current);
     };
-  }, []);
+  }, [consultarUso]);
 
   const escolherImagem = (arquivo: File | undefined) => {
     if (!arquivo) return;
@@ -92,17 +95,15 @@ function VideoComIA() {
   const gerar = async () => {
     if (!imagem) { setErro("Envie uma imagem para começar o vídeo."); return; }
     if (prompt.trim().length < 10) { setErro("Descreva o vídeo com mais detalhes."); return; }
-    const uso = lerUsoDiario();
-    if (uso >= LIMITE_VIDEOS_DIA) {
-      setErro(`Você já gerou ${LIMITE_VIDEOS_DIA} vídeos hoje. O limite volta a liberar amanhã.`);
-      setUsados(uso);
-      return;
-    }
     setGerando(true); setErro(null); setVideo(null);
     try {
-      const pedido = await criar({ data: { prompt, imagem, formato } });
-      registrarUsoDiario(uso + 1);
-      setUsados(uso + 1);
+      const resposta = await criar({ data: { prompt, imagem, formato } });
+      if (resposta.usados !== null) setUsados(resposta.usados);
+      if (resposta.erro || !resposta.pedido) {
+        setErro(resposta.erro ?? "Não foi possível gerar o vídeo agora.");
+        setGerando(false); return;
+      }
+      const pedido = resposta.pedido;
       timer.current = setInterval(async () => {
         try {
           const status = await consultar({ data: { statusUrl: pedido.statusUrl, respostaUrl: pedido.respostaUrl } });
@@ -143,8 +144,9 @@ function VideoComIA() {
             <option value="16:9">16:9 (horizontal)</option>
           </select>
         </label>
-        <p className="mt-3 text-xs text-muted-foreground">Duração de 5 segundos em 720p. Restam {Math.max(0, LIMITE_VIDEOS_DIA - usados)} de {LIMITE_VIDEOS_DIA} vídeos hoje.</p>
-        <Button onClick={gerar} disabled={gerando || esgotado} className="mt-4 w-full">
+        <p className="mt-3 text-xs text-muted-foreground">Duração de 5 segundos em 720p. {limiteCarregado ? `Restam ${Math.max(0, LIMITE_VIDEOS_DIA - usados)} de ${LIMITE_VIDEOS_DIA} vídeos hoje.` : "Consultando limite…"} O dia reinicia à meia-noite de Brasília. Cada geração iniciada conta no limite.</p>
+        {esgotado && <p role="status" className="mt-3 text-sm text-muted-foreground">Você atingiu o limite de 3 vídeos hoje. Volte amanhã, no horário de Brasília.</p>}
+        <Button onClick={gerar} disabled={gerando || esgotado || !limiteCarregado} className="mt-4 w-full">
           {gerando ? "Gerando…" : esgotado ? "Limite diário atingido" : "Gerar vídeo com IA"}
         </Button>
       </div>
