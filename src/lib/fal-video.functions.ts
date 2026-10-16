@@ -3,7 +3,6 @@ import { requireAuthenticatedUser } from "@/lib/authenticated-server.middleware"
 
 const FAL_QUEUE = "https://queue.fal.run";
 const MODELO = "fal-ai/ltx-video/image-to-video";
-const LIMITE_DIARIO = 3;
 
 type FalInput = { prompt: string; imagem: string; formato: string };
 
@@ -29,27 +28,13 @@ function erroAmigavel(): string {
   return "Não foi possível gerar o vídeo agora. Tente novamente em alguns minutos.";
 }
 
-/** Envia imagem + prompt para a fila da fal.ai e registra o uso diário. */
+/** Envia imagem + prompt para a fila da fal.ai e devolve os dados do pedido. */
 export const criarVideoFal = createServerFn({ method: "POST" })
   .middleware([requireAuthenticatedUser])
   .inputValidator(validarFal)
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
     const key = process.env["FAL_KEY"];
     if (!key) throw new Error("A geração de vídeo não está configurada.");
-
-    const inicioDoDia = new Date();
-    inicioDoDia.setHours(0, 0, 0, 0);
-    const { count, error: erroContagem } = await context.supabase
-      .from("video_geracoes")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", context.userId)
-      .gte("created_at", inicioDoDia.toISOString());
-    if (erroContagem) throw new Error(erroAmigavel());
-    if ((count ?? 0) >= LIMITE_DIARIO) {
-      throw new Error(
-        `Você já gerou ${LIMITE_DIARIO} vídeos hoje. O limite volta a liberar amanhã.`,
-      );
-    }
 
     const res = await fetch(`${FAL_QUEUE}/${MODELO}`, {
       method: "POST",
@@ -71,18 +56,10 @@ export const criarVideoFal = createServerFn({ method: "POST" })
     if (!fila.request_id || !fila.status_url || !fila.response_url) {
       throw new Error(erroAmigavel());
     }
-
-    const { error: erroRegistro } = await context.supabase
-      .from("video_geracoes")
-      .insert({ user_id: context.userId });
-    if (erroRegistro) throw new Error(erroAmigavel());
-
-    const restantes = LIMITE_DIARIO - (count ?? 0) - 1;
     return {
       pedido: fila.request_id,
       statusUrl: fila.status_url,
       respostaUrl: fila.response_url,
-      restantes,
     };
   });
 
