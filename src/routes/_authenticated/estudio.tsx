@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppNav } from "@/components/AppNav";
 import { AiResultado } from "@/components/AiResultado";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Button } from "@/components/ui/button";
 import { gerarTexto } from "@/lib/ai.functions";
+import { consultarVideoFal, criarVideoFal } from "@/lib/fal-video.functions";
 
 export const Route = createFileRoute("/_authenticated/estudio")({
   head: () => ({
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/estudio")({
   component: Estudio,
 });
 
-type Aba = "roteiro" | "live";
+type Aba = "roteiro" | "live" | "video";
 
 function Estudio() {
   const [aba, setAba] = useState<Aba>("roteiro");
@@ -33,11 +34,11 @@ function Estudio() {
         <h1 className="font-display text-3xl font-bold">Estúdio</h1>
         <p className="mt-2 text-[13.5px] text-muted-foreground">Crie roteiros de vídeo e de live para qualquer produto ou serviço.</p>
         <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Ferramentas do Estúdio">
-          {([{ id: "roteiro", label: "Roteirizar vídeo" }, { id: "live", label: "Roteirizar live" }] as const).map((item) => (
+          {([{ id: "roteiro", label: "Roteirizar vídeo" }, { id: "live", label: "Roteirizar live" }, { id: "video", label: "Vídeo com IA" }] as const).map((item) => (
             <Button key={item.id} type="button" role="tab" aria-selected={aba === item.id} variant={aba === item.id ? "secondary" : "ghost"} onClick={() => setAba(item.id)}>{item.label}</Button>
           ))}
         </div>
-        <RoteiroLivre key={aba} tipo={aba} />
+        {aba === "video" ? <VideoComIA /> : <RoteiroLivre key={aba} tipo={aba} />}
       </main>
     </div>
   );
