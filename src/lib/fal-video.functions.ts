@@ -28,14 +28,38 @@ function erroAmigavel(): string {
   return "Não foi possível gerar o vídeo agora. Tente novamente em alguns minutos.";
 }
 
+export const consultarUsoVideoFal = createServerFn({ method: "POST" })
+  .middleware([requireAuthenticatedUser])
+  .handler(async ({ context }) => {
+    const dia = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
+    const { data, error } = await context.supabase
+      .from("fal_video_daily_usage")
+      .select("used")
+      .eq("user_id", context.userId)
+      .eq("usage_date", dia)
+      .maybeSingle();
+    if (error) return { usados: null, erro: "Não foi possível consultar seu limite. Tente novamente." };
+    return { usados: data?.used ?? 0, erro: null };
+  });
+
 /** Envia imagem + prompt para a fila da fal.ai e devolve os dados do pedido. */
 export const criarVideoFal = createServerFn({ method: "POST" })
   .middleware([requireAuthenticatedUser])
   .inputValidator(validarFal)
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
     const key = process.env["FAL_KEY"];
-    if (!key) throw new Error("A geração de vídeo não está configurada.");
+    if (!key) return { erro: "A geração de vídeo não está configurada.", usados: null, pedido: null };
 
+    // Only this authenticated handler can reserve quota. The database upsert
+    // locks the account/day row, including across simultaneous requests.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: usados, error } = await supabaseAdmin.rpc("reserve_fal_video_quota", {
+      p_user_id: context.userId,
+    });
+    if (error) return { erro: "Não foi possível validar seu limite. Tente novamente.", usados: null, pedido: null };
+    if (usados === null) return { erro: "Você já iniciou 3 vídeos hoje. O limite será liberado amanhã, no horário de Brasília.", usados: 3, pedido: null };
+
+    try {
     const res = await fetch(`${FAL_QUEUE}/${MODELO}`, {
       method: "POST",
       headers: { Authorization: `Key ${key}`, "Content-Type": "application/json" },
@@ -57,10 +81,15 @@ export const criarVideoFal = createServerFn({ method: "POST" })
       throw new Error(erroAmigavel());
     }
     return {
-      pedido: fila.request_id,
-      statusUrl: fila.status_url,
-      respostaUrl: fila.response_url,
+      erro: null,
+      usados,
+      pedido: { id: fila.request_id, statusUrl: fila.status_url, respostaUrl: fila.response_url },
     };
+    } catch {
+      // Keep reservations after uncertain provider failures: retrying must not
+      // allow a fourth billable request when the first request was accepted.
+      return { erro: erroAmigavel(), usados, pedido: null };
+    }
   });
 
 /** Consulta o pedido na fila; quando pronto, devolve o endereço do vídeo. */

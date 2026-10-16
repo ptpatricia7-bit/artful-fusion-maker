@@ -22,6 +22,7 @@
 ## Protected server calls
 
 - Validate AI-tool access tokens against the auth service with `getUser(token)` in the project middleware; this supports both legacy and asymmetric session signatures without trusting decoded claims locally.
+- Reserve fal.ai daily quota atomically through a service-role-only database RPC after validating the user, before contacting fal.ai; browser storage and concurrent requests must never bypass the cap. Read usage through owner-scoped RLS, and retain reservations after uncertain provider failures to prevent extra billable requests.
 
 ## Download generators
 - Keep download-only generators in a shared GeneratorTool with per-tool protected leaf routes; this preserves consistent controls without publishing generated content.

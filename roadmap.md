@@ -19,7 +19,8 @@
 - [x] Nova imagem do Painel
 
 ## Alterações solicitadas
-- [ ] Adicionar somente a aba Vídeo com IA no Estúdio via fal.ai, fila protegida, 5s/720p e limite de três vídeos por usuário por dia — bloqueado: habilitar permissão de alterações no banco no Lovable Cloud para registrar o limite com segurança
+- [x] Adicionar somente a aba Vídeo com IA no Estúdio via fal.ai, fila protegida, 5s/720p e limite de três vídeos por usuário por dia no banco, validado no servidor
+- [ ] Verificar o limite diário protegido, concorrência, permissões e leitura autenticada na aba Vídeo com IA
 - [x] Personalizar nomes, fotos e horários; download PNG e fallback verificados com login real, entrega do arquivo ao compartilhamento testada; seleção/envio em grupo fica no aplicativo escolhido pelo usuário
 - [x] Adicionar Gerador de Conversas do WhatsApp com edição, simulação visível e download de imagens — edição e PNG verificados com login real; IA mantém aviso de créditos
 - [x] Remover GeraSpy, ranking do Painel e Multiplicador, mantendo o restante

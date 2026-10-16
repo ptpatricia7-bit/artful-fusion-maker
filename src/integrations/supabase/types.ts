@@ -38,6 +38,27 @@ export type Database = {
         }
         Relationships: []
       }
+      fal_video_daily_usage: {
+        Row: {
+          updated_at: string
+          usage_date: string
+          used: number
+          user_id: string
+        }
+        Insert: {
+          updated_at?: string
+          usage_date?: string
+          used?: number
+          user_id: string
+        }
+        Update: {
+          updated_at?: string
+          usage_date?: string
+          used?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -64,7 +85,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      reserve_fal_video_quota: { Args: { p_user_id: string }; Returns: number }
     }
     Enums: {
       [_ in never]: never
