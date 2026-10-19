@@ -61,10 +61,14 @@ function Entrar() {
   useEffect(() => {
     if (checkingSession || !user) return;
     const ref = localStorage.getItem("tarte-ref");
-    void supabase
-      .rpc("ensure_affiliate", { p_ref: ref ?? undefined })
-      .then(() => localStorage.removeItem("tarte-ref"))
-      .finally(() => void router.navigate({ href: destination, replace: true }));
+    void (async () => {
+      try {
+        await supabase.rpc("ensure_affiliate", ref ? { p_ref: ref } : {});
+        localStorage.removeItem("tarte-ref");
+      } finally {
+        void router.navigate({ href: destination, replace: true });
+      }
+    })();
   }, [checkingSession, destination, router, user]);
 
   const friendlyError = (authMessage: string) => {
