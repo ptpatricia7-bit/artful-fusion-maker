@@ -1,0 +1,10 @@
+REVOKE ALL ON public.user_roles, public.user_subscriptions, public.configuration_audit FROM anon, authenticated;
+GRANT SELECT ON public.user_roles, public.user_subscriptions, public.configuration_audit TO authenticated;
+GRANT ALL ON public.user_roles, public.user_subscriptions, public.configuration_audit TO service_role;
+REVOKE ALL ON public.commission_settings FROM anon, authenticated;
+GRANT SELECT, INSERT, UPDATE ON public.commission_settings TO authenticated;
+GRANT ALL ON public.commission_settings TO service_role;
+REVOKE ALL ON public.subscription_plans FROM anon, authenticated;
+GRANT SELECT ON public.subscription_plans TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.subscription_plans TO authenticated;
+GRANT ALL ON public.subscription_plans TO service_role;

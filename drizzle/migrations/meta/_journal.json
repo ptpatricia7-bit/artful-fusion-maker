@@ -36,6 +36,13 @@
       "when": 1792374411714,
       "tag": "0004_configurable_plans_roles_and_commissions",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792374705938,
+      "tag": "0005_restrict_foundation_write_grants",
+      "breakpoints": true
     }
   ]
 }
