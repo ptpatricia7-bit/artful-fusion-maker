@@ -54,7 +54,17 @@ function Entrar() {
   })();
 
   useEffect(() => {
-    if (!checkingSession && user) void router.navigate({ href: destination, replace: true });
+    const ref = new URLSearchParams(window.location.search).get("ref");
+    if (ref && /^[a-z0-9]{4,16}$/i.test(ref)) localStorage.setItem("tarte-ref", ref);
+  }, []);
+
+  useEffect(() => {
+    if (checkingSession || !user) return;
+    const ref = localStorage.getItem("tarte-ref");
+    void supabase
+      .rpc("ensure_affiliate", { p_ref: ref ?? undefined })
+      .then(() => localStorage.removeItem("tarte-ref"))
+      .finally(() => void router.navigate({ href: destination, replace: true }));
   }, [checkingSession, destination, router, user]);
 
   const friendlyError = (authMessage: string) => {
