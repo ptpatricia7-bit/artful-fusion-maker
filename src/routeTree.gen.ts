@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAudioRouteImport } from './routes/_authenticated/audio'
@@ -30,6 +31,7 @@ import { Route as AuthenticatedProdutoRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
 import { Route as AuthenticatedQuizRouteImport } from './routes/_authenticated/quiz'
 import { Route as AuthenticatedRoteirizadorRouteImport } from './routes/_authenticated/roteirizador'
+import { Route as AuthenticatedVenderRouteImport } from './routes/_authenticated/vender'
 import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
 import { Route as ApiAudioRouteImport } from './routes/api/audio'
 
@@ -50,6 +52,11 @@ const EntrarRoute = EntrarRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceRoute = MarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanosRoute = PlanosRouteImport.update({
@@ -138,6 +145,11 @@ const AuthenticatedRoteirizadorRoute =
     path: '/roteirizador',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedVenderRoute = AuthenticatedVenderRouteImport.update({
+  id: '/vender',
+  path: '/vender',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedVideoRoute = AuthenticatedVideoRouteImport.update({
   id: '/video',
   path: '/video',
@@ -153,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/entrar': typeof EntrarRoute
   '/faq': typeof FaqRoute
+  '/marketplace': typeof MarketplaceRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
   '/audio': typeof AuthenticatedAudioRoute
@@ -170,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/produtos': typeof AuthenticatedProdutosRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
+  '/vender': typeof AuthenticatedVenderRoute
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
 }
@@ -177,6 +191,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/entrar': typeof EntrarRoute
   '/faq': typeof FaqRoute
+  '/marketplace': typeof MarketplaceRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
   '/audio': typeof AuthenticatedAudioRoute
@@ -194,6 +209,7 @@ export interface FileRoutesByTo {
   '/produtos': typeof AuthenticatedProdutosRoute
   '/quiz': typeof AuthenticatedQuizRoute
   '/roteirizador': typeof AuthenticatedRoteirizadorRoute
+  '/vender': typeof AuthenticatedVenderRoute
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
 }
@@ -203,6 +219,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/entrar': typeof EntrarRoute
   '/faq': typeof FaqRoute
+  '/marketplace': typeof MarketplaceRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/audio': typeof AuthenticatedAudioRoute
@@ -220,6 +237,7 @@ export interface FileRoutesById {
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
   '/_authenticated/quiz': typeof AuthenticatedQuizRoute
   '/_authenticated/roteirizador': typeof AuthenticatedRoteirizadorRoute
+  '/_authenticated/vender': typeof AuthenticatedVenderRoute
   '/_authenticated/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
 }
@@ -229,6 +247,7 @@ export interface FileRouteTypes {
     | '/'
     | '/entrar'
     | '/faq'
+    | '/marketplace'
     | '/planos'
     | '/reset-password'
     | '/audio'
@@ -246,6 +265,7 @@ export interface FileRouteTypes {
     | '/produtos'
     | '/quiz'
     | '/roteirizador'
+    | '/vender'
     | '/video'
     | '/api/audio'
   fileRoutesByTo: FileRoutesByTo
@@ -253,6 +273,7 @@ export interface FileRouteTypes {
     | '/'
     | '/entrar'
     | '/faq'
+    | '/marketplace'
     | '/planos'
     | '/reset-password'
     | '/audio'
@@ -270,6 +291,7 @@ export interface FileRouteTypes {
     | '/produtos'
     | '/quiz'
     | '/roteirizador'
+    | '/vender'
     | '/video'
     | '/api/audio'
   id:
@@ -278,6 +300,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/entrar'
     | '/faq'
+    | '/marketplace'
     | '/planos'
     | '/reset-password'
     | '/_authenticated/audio'
@@ -295,6 +318,7 @@ export interface FileRouteTypes {
     | '/_authenticated/produtos'
     | '/_authenticated/quiz'
     | '/_authenticated/roteirizador'
+    | '/_authenticated/vender'
     | '/_authenticated/video'
     | '/api/audio'
   fileRoutesById: FileRoutesById
@@ -304,6 +328,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   EntrarRoute: typeof EntrarRoute
   FaqRoute: typeof FaqRoute
+  MarketplaceRoute: typeof MarketplaceRoute
   PlanosRoute: typeof PlanosRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiAudioRoute: typeof ApiAudioRoute
@@ -337,6 +362,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketplace': {
+      id: '/marketplace'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof MarketplaceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/planos': {
@@ -458,6 +490,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoteirizadorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/vender': {
+      id: '/_authenticated/vender'
+      path: '/vender'
+      fullPath: '/vender'
+      preLoaderRoute: typeof AuthenticatedVenderRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/video': {
       id: '/_authenticated/video'
       path: '/video'
@@ -491,6 +530,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
   AuthenticatedQuizRoute: typeof AuthenticatedQuizRoute
   AuthenticatedRoteirizadorRoute: typeof AuthenticatedRoteirizadorRoute
+  AuthenticatedVenderRoute: typeof AuthenticatedVenderRoute
   AuthenticatedVideoRoute: typeof AuthenticatedVideoRoute
 }
 
@@ -510,6 +550,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
   AuthenticatedQuizRoute: AuthenticatedQuizRoute,
   AuthenticatedRoteirizadorRoute: AuthenticatedRoteirizadorRoute,
+  AuthenticatedVenderRoute: AuthenticatedVenderRoute,
   AuthenticatedVideoRoute: AuthenticatedVideoRoute,
 }
 
@@ -521,6 +562,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   EntrarRoute: EntrarRoute,
   FaqRoute: FaqRoute,
+  MarketplaceRoute: MarketplaceRoute,
   PlanosRoute: PlanosRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiAudioRoute: ApiAudioRoute,

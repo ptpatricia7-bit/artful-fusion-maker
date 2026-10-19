@@ -59,6 +59,54 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_products: {
+        Row: {
+          category: string
+          contact_url: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          kind: string
+          price_cents: number
+          seller_id: string
+          seller_name: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          contact_url?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          kind?: string
+          price_cents: number
+          seller_id?: string
+          seller_name?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          contact_url?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          kind?: string
+          price_cents?: number
+          seller_id?: string
+          seller_name?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

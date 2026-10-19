@@ -15,6 +15,13 @@
       "when": 1792131319384,
       "tag": "0001_restrict_fal_quota_table_mutations",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792371018144,
+      "tag": "0002_create_marketplace_products",
+      "breakpoints": true
     }
   ]
 }
