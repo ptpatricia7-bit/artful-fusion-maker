@@ -11,6 +11,10 @@
 
 ## Authentication architecture
 
+- Store dashboard roles exclusively in `public.user_roles`; only trusted operations assign roles and initial admin assignment requires a verified owner, preventing self-promotion through browser writes or metadata.
+- Keep plan configuration, payment-verified subscriptions and commission settings separate; admin RLS governs configuration and an audit trigger records changes, while only trusted payment operations write subscription payment state.
+- Treat stored plan quotas and commission settings as configuration until the corresponding tool/payment integration consumes them; never claim a schema change enables billing or replaces the atomic video cap.
+
 - Keep account-only tools under the `_authenticated` route layout, protect AI server functions with `requireSupabaseAuth`, and maintain the single root auth listener; this prevents direct access to private screens and AI calls while keeping account state consistent.
 - Create missing `profiles` rows for authenticated users on first sign-in using their own RLS-scoped client; signup email confirmation does not establish a session yet.
 
