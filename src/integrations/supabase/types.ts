@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_commissions: {
+        Row: {
+          affiliate_id: string
+          amount_cents: number
+          created_at: string
+          description: string
+          id: string
+          level: number
+          status: string
+        }
+        Insert: {
+          affiliate_id: string
+          amount_cents: number
+          created_at?: string
+          description?: string
+          id?: string
+          level: number
+          status?: string
+        }
+        Update: {
+          affiliate_id?: string
+          amount_cents?: number
+          created_at?: string
+          description?: string
+          id?: string
+          level?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      affiliates: {
+        Row: {
+          code: string
+          created_at: string
+          pix_key: string | null
+          referred_by: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          code?: string
+          created_at?: string
+          pix_key?: string | null
+          referred_by?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          pix_key?: string | null
+          referred_by?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_gateway_control: {
         Row: {
           id: number
@@ -133,7 +190,32 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      affiliate_referral_counts: {
+        Args: never
+        Returns: {
+          nivel1: number
+          nivel2: number
+        }[]
+      }
+      ensure_affiliate: {
+        Args: { p_ref?: string }
+        Returns: {
+          code: string
+          created_at: string
+          pix_key: string | null
+          referred_by: string | null
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "affiliates"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       reserve_fal_video_quota: { Args: { p_user_id: string }; Returns: number }
+      set_affiliate_pix: { Args: { p_pix: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
