@@ -95,6 +95,69 @@ export type Database = {
         }
         Relationships: []
       }
+      commission_settings: {
+        Row: {
+          enabled: boolean
+          hold_days: number
+          id: number
+          level1_bps: number
+          level2_bps: number
+          network_depth: number
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          hold_days?: number
+          id?: number
+          level1_bps?: number
+          level2_bps?: number
+          network_depth?: number
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          hold_days?: number
+          id?: number
+          level1_bps?: number
+          level2_bps?: number
+          network_depth?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      configuration_audit: {
+        Row: {
+          actor_id: string | null
+          after_value: Json | null
+          before_value: Json | null
+          created_at: string
+          entity: string
+          entity_id: string
+          id: string
+          operation: string
+        }
+        Insert: {
+          actor_id?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          created_at?: string
+          entity: string
+          entity_id: string
+          id?: string
+          operation: string
+        }
+        Update: {
+          actor_id?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          created_at?: string
+          entity?: string
+          entity_id?: string
+          id?: string
+          operation?: string
+        }
+        Relationships: []
+      }
       fal_video_daily_usage: {
         Row: {
           updated_at: string
@@ -185,6 +248,119 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_plans: {
+        Row: {
+          active: boolean
+          billing_months: number
+          code: string
+          created_at: string
+          currency: string
+          fal_video_daily_limit: number
+          id: string
+          image_daily_limit: number | null
+          name: string
+          price_cents: number
+          text_daily_limit: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          billing_months?: number
+          code: string
+          created_at?: string
+          currency?: string
+          fal_video_daily_limit?: number
+          id?: string
+          image_daily_limit?: number | null
+          name: string
+          price_cents?: number
+          text_daily_limit?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          billing_months?: number
+          code?: string
+          created_at?: string
+          currency?: string
+          fal_video_daily_limit?: number
+          id?: string
+          image_daily_limit?: number | null
+          name?: string
+          price_cents?: number
+          text_daily_limit?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          plan_id: string
+          provider: string | null
+          provider_subscription_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_id: string
+          provider?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_id?: string
+          provider?: string | null
+          provider_subscription_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -214,11 +390,18 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       reserve_fal_video_quota: { Args: { p_user_id: string }; Returns: number }
       set_affiliate_pix: { Args: { p_pix: string }; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user" | "seller" | "affiliate"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -345,6 +528,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user", "seller", "affiliate"],
+    },
   },
 } as const
