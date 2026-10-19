@@ -16,6 +16,7 @@ const ferramentas = [
   { to: "/banner", label: "Gerador de Banner" },
   { to: "/quiz", label: "Criador de quiz" },
   { to: "/conversas", label: "Gerador de Conversas" },
+  { to: "/vender", label: "Meus produtos" },
   { to: "/indique", label: "Indique e ganhe" },
 ] as const;
 

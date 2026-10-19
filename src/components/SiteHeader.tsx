@@ -10,6 +10,7 @@ const links = [
   { to: "/", label: "Início" },
   { to: "/painel", label: "Painel" },
   { to: "/estudio", label: "Estúdio" },
+  { to: "/marketplace", label: "Marketplace" },
   { to: "/planos", label: "Planos" },
   { to: "/faq", label: "FAQ" },
 ] as const;

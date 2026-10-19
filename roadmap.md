@@ -28,3 +28,9 @@
 - [x] Adicionar Páginas, Áudio, Produto, Banner e Quiz para gerar e baixar
 - [x] Verificar navegação autenticada, abas, remoções e aviso de créditos sem erro na página
 - [ ] Verificar geração e downloads reais das cinco ferramentas — bloqueado pela pausa persistida por falta de créditos de IA; aguarda restauração do acesso e novo pedido explícito da proprietária
+
+## Arsenal / Marketplace (out 2026)
+- [x] Marketplace: vitrine pública e painel do vendedor
+- [ ] Central de afiliados com 2 níveis (só vendas reais, carência 7 dias)
+- [ ] Cobrança — aguardando escolha do provedor de pagamento
+- [ ] Planos com limites de IA
