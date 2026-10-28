@@ -1,44 +1,42 @@
 // Integração Indica Vizinho: verifica grants de compra no banco do marketplace
 // e ativa a assinatura permanente do plano "Indica Vizinho" no T@arte.
-// Server-only: usa a chave service_role do Supabase da Indica Vizinho, que fica
-// apenas nos secrets do servidor (IV_SUPABASE_URL / IV_SUPABASE_SERVICE_ROLE_KEY).
+// Server-only. A verificação usa uma RPC protegida por segredo compartilhado
+// (IV_SHARED_SECRET) — a tabela de grants não é exposta publicamente.
 import { createClient } from "@supabase/supabase-js";
 
 function createIvClient() {
   const url = process.env["IV_SUPABASE_URL"];
-  const key = process.env["IV_SUPABASE_SERVICE_ROLE_KEY"];
+  const key = process.env["IV_SUPABASE_ANON_KEY"];
   if (!url || !key) {
-    throw new Error("Integração Indica Vizinho não configurada (IV_SUPABASE_URL / IV_SUPABASE_SERVICE_ROLE_KEY).");
+    throw new Error("Integração Indica Vizinho não configurada (IV_SUPABASE_URL / IV_SUPABASE_ANON_KEY).");
   }
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
   });
 }
 
-export interface IvGrant {
-  grant_type: string;
-  item_id: string;
-  granted_at: string;
-}
-
-export async function listGrantsForEmail(email: string): Promise<IvGrant[]> {
+export async function hasIndicaVizinhoGrant(email: string): Promise<boolean> {
   const iv = createIvClient();
-  const { data, error } = await iv
-    .from("tool_access_grants")
-    .select("grant_type,item_id,granted_at")
-    .eq("email", email.toLowerCase());
+  const secret = process.env["IV_SHARED_SECRET"];
+  if (!secret) {
+    throw new Error("Integração Indica Vizinho não configurada (IV_SHARED_SECRET).");
+  }
+  const { data, error } = await iv.rpc("iv_check_grant", {
+    p_email: email.toLowerCase(),
+    p_secret: secret,
+  });
   if (error) {
     throw new Error("Não foi possível consultar o acesso Indica Vizinho agora.");
   }
-  return data ?? [];
+  return data === true;
 }
 
 export async function activateIndicaVizinhoPlan(
   userId: string,
   email: string,
-): Promise<{ ativado: boolean; ferramentas?: number }> {
-  const grants = await listGrantsForEmail(email);
-  if (grants.length === 0) return { ativado: false };
+): Promise<{ ativado: boolean }> {
+  const hasGrant = await hasIndicaVizinhoGrant(email);
+  if (!hasGrant) return { ativado: false };
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -77,5 +75,5 @@ export async function activateIndicaVizinhoPlan(
   if (subError) {
     throw new Error("Não foi possível ativar a assinatura Indica Vizinho.");
   }
-  return { ativado: true, ferramentas: grants.length };
+  return { ativado: true };
 }
