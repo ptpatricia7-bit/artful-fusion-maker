@@ -1,4 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth-context";
 import painelAsset from "@/assets/tarte-roupa.png.asset.json";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -44,10 +47,69 @@ const praQuem = [
   { t: "Agência", d: "Gerencia vários perfis e precisa de volume de conteúdo sem inflar a equipe." },
 ];
 
+type IvEstado = "nada" | "ativando" | "ativo" | "sem-acesso" | "erro";
+
 function Home() {
+  const router = useRouter();
+  const { user, loading: checkingSession } = useAuth();
+  const [ivEstado, setIvEstado] = useState<IvEstado>("nada");
+  const ivGrant = new URLSearchParams(window.location.search).get("iv_grant");
+
+  useEffect(() => {
+    if (!ivGrant || checkingSession) return;
+    if (!user) {
+      void router.navigate({ href: "/entrar?iv=1&redirecionar=%2Fpainel", replace: true });
+      return;
+    }
+    void (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return;
+      setIvEstado("ativando");
+      try {
+        const res = await fetch("/api/indica-vizinho", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${data.session.access_token}` },
+        });
+        if (res.ok) {
+          const body = (await res.json()) as { ativado?: boolean };
+          setIvEstado(body.ativado ? "ativo" : "sem-acesso");
+        } else {
+          setIvEstado("erro");
+        }
+      } catch {
+        setIvEstado("erro");
+      }
+    })();
+  }, [checkingSession, ivGrant, router, user]);
+
   return (
     <div className="min-h-screen">
       <SiteHeader />
+      {ivEstado !== "nada" && (
+        <div className="border-b border-border bg-card">
+          <div className="mx-auto max-w-6xl px-5 py-3 text-[13.5px]">
+            {ivEstado === "ativando" && (
+              <p className="text-muted-foreground">Ativando seu acesso Indica Vizinho…</p>
+            )}
+            {ivEstado === "ativo" && (
+              <p className="font-medium text-primary">
+                Acesso Indica Vizinho ativado! Suas ferramentas estão liberadas no painel.
+              </p>
+            )}
+            {ivEstado === "sem-acesso" && (
+              <p className="text-muted-foreground">
+                Não encontramos uma compra ou Pacote Vizinho ativo para o seu e-mail na Indica
+                Vizinho.
+              </p>
+            )}
+            {ivEstado === "erro" && (
+              <p className="text-destructive">
+                Não foi possível ativar agora. Tente novamente em alguns minutos.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Hero */}
       <section className="aurora relative overflow-hidden border-b border-border">

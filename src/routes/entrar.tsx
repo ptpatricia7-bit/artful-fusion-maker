@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 
-type Search = { redirecionar?: string | undefined };
+type Search = { redirecionar?: string | undefined; iv?: string | undefined };
 
 export const Route = createFileRoute("/entrar")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     redirecionar: typeof search['redirecionar'] === "string" ? search['redirecionar'] : undefined,
+    iv: typeof search['iv'] === "string" ? search['iv'] : undefined,
   }),
   head: () => ({
     meta: [
@@ -65,11 +66,21 @@ function Entrar() {
       try {
         await supabase.rpc("ensure_affiliate", ref ? { p_ref: ref } : {});
         localStorage.removeItem("tarte-ref");
+        // Chegou da Indica Vizinho: ativa o acesso comprado antes de navegar.
+        if (search.iv === "1") {
+          const { data: sessionData } = await supabase.auth.getSession();
+          if (sessionData.session) {
+            await fetch("/api/indica-vizinho", {
+              method: "POST",
+              headers: { Authorization: `Bearer ${sessionData.session.access_token}` },
+            }).catch(() => undefined);
+          }
+        }
       } finally {
         void router.navigate({ href: destination, replace: true });
       }
     })();
-  }, [checkingSession, destination, router, user]);
+  }, [checkingSession, destination, router, user, search.iv]);
 
   const friendlyError = (authMessage: string) => {
     if (authMessage.toLowerCase().includes("invalid login credentials")) return "E-mail ou senha incorretos.";
@@ -162,6 +173,12 @@ function Entrar() {
                 ? "Digite seu e-mail para receber o link de recuperação."
                 : "Use seu e-mail e senha para acessar o T@arte."}
           </p>
+          {search.iv === "1" && (
+            <p className="rounded-md border border-primary/40 bg-primary/5 px-4 py-3 text-[13px] text-primary">
+              Você veio da Indica Vizinho. Entre com o mesmo e-mail da sua compra para ativar o
+              acesso às ferramentas.
+            </p>
+          )}
           <form
             className="mt-7 space-y-4"
             onSubmit={submit}

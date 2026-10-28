@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { supabase } from "@/integrations/supabase/client";
 import painelAsset from "@/assets/tarte-roupa.png.asset.json";
 import { produtos, nichos, periodos, videosVirais, brl } from "@/lib/tarte-data";
 
@@ -50,6 +51,19 @@ function Painel() {
   const [busca, setBusca] = useState("");
   const [minFat, setMinFat] = useState(0);
   const [ordem, setOrdem] = useState<"faturamento" | "vendas" | "crescimento">("faturamento");
+  const [ivAtivo, setIvAtivo] = useState(false);
+
+  useEffect(() => {
+    void (async () => {
+      const { data } = await supabase
+        .from("user_subscriptions")
+        .select("id")
+        .eq("provider", "indica-vizinho")
+        .eq("status", "active")
+        .limit(1);
+      setIvAtivo(!!data && data.length > 0);
+    })();
+  }, []);
 
   const lista = useMemo(
     () =>
@@ -72,7 +86,14 @@ function Painel() {
         <div className="grid gap-5 overflow-hidden rounded-lg border border-border bg-card md:grid-cols-[1fr_360px] md:items-center">
           <div className="p-6">
           <div>
-            <h1 className="font-display text-3xl font-bold">Painel T@arte</h1>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="font-display text-3xl font-bold">Painel T@arte</h1>
+              {ivAtivo && (
+                <span className="rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary">
+                  Indica Vizinho · acesso ativo
+                </span>
+              )}
+            </div>
             <p className="mt-2 text-[13.5px] text-muted-foreground">
               Dados do TikTok Shop Brasil · atualizado hoje às 04:12 · período: {periodo}
             </p>
