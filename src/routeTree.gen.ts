@@ -34,6 +34,7 @@ import { Route as AuthenticatedRoteirizadorRouteImport } from './routes/_authent
 import { Route as AuthenticatedVenderRouteImport } from './routes/_authenticated/vender'
 import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
 import { Route as ApiAudioRouteImport } from './routes/api/audio'
+import { Route as ApiIndicaVizinhoRouteImport } from './routes/api/indica-vizinho'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -160,6 +161,11 @@ const ApiAudioRoute = ApiAudioRouteImport.update({
   path: '/api/audio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiIndicaVizinhoRoute = ApiIndicaVizinhoRouteImport.update({
+  id: '/api/indica-vizinho',
+  path: '/api/indica-vizinho',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/vender': typeof AuthenticatedVenderRoute
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
+  '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -212,6 +219,7 @@ export interface FileRoutesByTo {
   '/vender': typeof AuthenticatedVenderRoute
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
+  '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -240,6 +248,7 @@ export interface FileRoutesById {
   '/_authenticated/vender': typeof AuthenticatedVenderRoute
   '/_authenticated/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
+  '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/vender'
     | '/video'
     | '/api/audio'
+    | '/api/indica-vizinho'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/vender'
     | '/video'
     | '/api/audio'
+    | '/api/indica-vizinho'
   id:
     | '__root__'
     | '/'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/_authenticated/vender'
     | '/_authenticated/video'
     | '/api/audio'
+    | '/api/indica-vizinho'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -332,6 +344,7 @@ export interface RootRouteChildren {
   PlanosRoute: typeof PlanosRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiAudioRoute: typeof ApiAudioRoute
+  ApiIndicaVizinhoRoute: typeof ApiIndicaVizinhoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -511,6 +524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAudioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/indica-vizinho': {
+      id: '/api/indica-vizinho'
+      path: '/api/indica-vizinho'
+      fullPath: '/api/indica-vizinho'
+      preLoaderRoute: typeof ApiIndicaVizinhoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -566,6 +586,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanosRoute: PlanosRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiAudioRoute: ApiAudioRoute,
+  ApiIndicaVizinhoRoute: ApiIndicaVizinhoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

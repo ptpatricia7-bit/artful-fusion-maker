@@ -53,6 +53,7 @@ function Home() {
   const router = useRouter();
   const { user, loading: checkingSession } = useAuth();
   const [ivEstado, setIvEstado] = useState<IvEstado>("nada");
+  const [ivErro, setIvErro] = useState("");
   const ivGrant = new URLSearchParams(window.location.search).get("iv_grant");
 
   useEffect(() => {
@@ -74,6 +75,8 @@ function Home() {
           const body = (await res.json()) as { ativado?: boolean };
           setIvEstado(body.ativado ? "ativo" : "sem-acesso");
         } else {
+          const body = (await res.json().catch(() => null)) as { erro?: string } | null;
+          setIvErro(body?.erro ?? "");
           setIvEstado("erro");
         }
       } catch {
@@ -105,6 +108,7 @@ function Home() {
             {ivEstado === "erro" && (
               <p className="text-destructive">
                 Não foi possível ativar agora. Tente novamente em alguns minutos.
+                {ivErro ? ` (${ivErro})` : ""}
               </p>
             )}
           </div>

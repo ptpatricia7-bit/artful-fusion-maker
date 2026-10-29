@@ -26,7 +26,7 @@ export async function hasIndicaVizinhoGrant(email: string): Promise<boolean> {
     p_secret: secret,
   });
   if (error) {
-    throw new Error("Não foi possível consultar o acesso Indica Vizinho agora.");
+    throw new Error("Falha na consulta Indica Vizinho: " + (error.message ?? JSON.stringify(error)));
   }
   return data === true;
 }
@@ -54,7 +54,7 @@ export async function activateIndicaVizinhoPlan(
       .select("id")
       .single();
     if (planError || !created) {
-      throw new Error("Não foi possível preparar o plano Indica Vizinho.");
+      throw new Error("Falha ao preparar o plano Indica Vizinho: " + (planError?.message ?? "resposta vazia"));
     }
     planId = created.id;
   }
@@ -73,7 +73,7 @@ export async function activateIndicaVizinhoPlan(
     { onConflict: "provider,provider_subscription_id" },
   );
   if (subError) {
-    throw new Error("Não foi possível ativar a assinatura Indica Vizinho.");
+    throw new Error("Falha ao ativar a assinatura Indica Vizinho: " + subError.message);
   }
   return { ativado: true };
 }

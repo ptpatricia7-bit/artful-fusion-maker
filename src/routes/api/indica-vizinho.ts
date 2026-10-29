@@ -30,6 +30,7 @@ export const Route = createFileRoute("/api/indica-vizinho")({
           return Response.json(result);
         } catch (err) {
           const message = err instanceof Error ? err.message : "Não foi possível ativar agora.";
+          console.error("[indica-vizinho] Falha na ativação:", message);
           const status = message.includes("não configurada") ? 503 : 500;
           return Response.json({ erro: message }, { status });
         }
