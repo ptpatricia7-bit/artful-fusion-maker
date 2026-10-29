@@ -27,10 +27,11 @@ export async function hasIndicaVizinhoGrant(email: string): Promise<boolean> {
   });
   if (error) {
     let ivHost = "URL inválida";
+    const rawUrl = process.env["IV_SUPABASE_URL"] ?? "";
     try {
-      ivHost = new URL(url).host + new URL(url).pathname;
+      ivHost = new URL(rawUrl).host + new URL(rawUrl).pathname;
     } catch {
-      ivHost = JSON.stringify(url);
+      ivHost = JSON.stringify(rawUrl);
     }
     throw new Error("Falha na consulta Indica Vizinho (" + ivHost + "): " + (error.message ?? JSON.stringify(error)));
   }
