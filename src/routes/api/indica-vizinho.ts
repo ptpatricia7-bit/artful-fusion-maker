@@ -18,7 +18,20 @@ export const Route = createFileRoute("/api/indica-vizinho")({
         });
         const { data, error } = await client.auth.getUser(token);
         if (error || !data.user) {
-          return Response.json({ erro: "Sua sessão expirou. Entre novamente." }, { status: 401 });
+          let host = "URL inválida";
+          try {
+            host = new URL(url).host;
+          } catch {
+            host = "URL inválida: " + JSON.stringify(url);
+          }
+          const keyKind = publishable?.startsWith("sb_publishable_")
+            ? "chave nova"
+            : `chave tipo ${publishable?.slice(0, 8)}…`;
+          console.error(`[indica-vizinho] Token rejeitado. Servidor usa: ${host} / ${keyKind}`);
+          return Response.json(
+            { erro: `Servidor com Supabase errado (${host} / ${keyKind}).` },
+            { status: 401 },
+          );
         }
         const email = data.user.email ?? "";
         if (!email) {
