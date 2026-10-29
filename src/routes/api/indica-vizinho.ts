@@ -27,9 +27,9 @@ export const Route = createFileRoute("/api/indica-vizinho")({
           const keyKind = publishable?.startsWith("sb_publishable_")
             ? "chave nova"
             : `chave tipo ${publishable?.slice(0, 8)}…`;
-          console.error(`[indica-vizinho] Token rejeitado. Servidor usa: ${host} / ${keyKind}`);
+          console.error(`[indica-vizinho] Token rejeitado. Servidor usa: ${host} / ${keyKind} / motivo: ${error?.message}`);
           return Response.json(
-            { erro: `Servidor com Supabase errado (${host} / ${keyKind}).` },
+            { erro: `Servidor não validou a sessão (${host} / ${keyKind}): ${error?.message ?? "sem detalhes"}` },
             { status: 401 },
           );
         }
