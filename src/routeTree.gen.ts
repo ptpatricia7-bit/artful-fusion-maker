@@ -16,6 +16,7 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as PlanosRouteImport } from './routes/planos'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAudioRouteImport } from './routes/_authenticated/audio'
 import { Route as AuthenticatedBannerRouteImport } from './routes/_authenticated/banner'
 import { Route as AuthenticatedCabineRouteImport } from './routes/_authenticated/cabine'
@@ -69,6 +70,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAudioRoute = AuthenticatedAudioRouteImport.update({
   id: '/audio',
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/marketplace': typeof MarketplaceRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/audio': typeof AuthenticatedAudioRoute
   '/banner': typeof AuthenticatedBannerRoute
   '/cabine': typeof AuthenticatedCabineRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/marketplace': typeof MarketplaceRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/audio': typeof AuthenticatedAudioRoute
   '/banner': typeof AuthenticatedBannerRoute
   '/cabine': typeof AuthenticatedCabineRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/marketplace': typeof MarketplaceRoute
   '/planos': typeof PlanosRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/audio': typeof AuthenticatedAudioRoute
   '/_authenticated/banner': typeof AuthenticatedBannerRoute
   '/_authenticated/cabine': typeof AuthenticatedCabineRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/marketplace'
     | '/planos'
     | '/reset-password'
+    | '/admin'
     | '/audio'
     | '/banner'
     | '/cabine'
@@ -286,6 +296,7 @@ export interface FileRouteTypes {
     | '/marketplace'
     | '/planos'
     | '/reset-password'
+    | '/admin'
     | '/audio'
     | '/banner'
     | '/cabine'
@@ -314,6 +325,7 @@ export interface FileRouteTypes {
     | '/marketplace'
     | '/planos'
     | '/reset-password'
+    | '/_authenticated/admin'
     | '/_authenticated/audio'
     | '/_authenticated/banner'
     | '/_authenticated/cabine'
@@ -397,6 +409,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/audio': {
       id: '/_authenticated/audio'
@@ -535,6 +554,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAudioRoute: typeof AuthenticatedAudioRoute
   AuthenticatedBannerRoute: typeof AuthenticatedBannerRoute
   AuthenticatedCabineRoute: typeof AuthenticatedCabineRoute
@@ -555,6 +575,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAudioRoute: AuthenticatedAudioRoute,
   AuthenticatedBannerRoute: AuthenticatedBannerRoute,
   AuthenticatedCabineRoute: AuthenticatedCabineRoute,

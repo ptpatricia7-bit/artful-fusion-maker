@@ -16,8 +16,9 @@ const ferramentas = [
   { to: "/banner", label: "Gerador de Banner" },
   { to: "/quiz", label: "Criador de quiz" },
   { to: "/conversas", label: "Gerador de Conversas" },
-  { to: "/vender", label: "Meus produtos" },
-  { to: "/indique", label: "Indique e ganhe" },
+  { to: "/vender", label: "Painel do vendedor" },
+  { to: "/indique", label: "Painel do afiliado" },
+  { to: "/admin", label: "Administrador" },
 ] as const;
 
 export function AppNav() {
