@@ -33,5 +33,5 @@
 - [x] Fundação no banco: papéis protegidos, planos e assinaturas, configurações ajustáveis de rede e comissões; nove testes de valores, restrições e permissões aprovados. Nenhum administrador atribuído automaticamente; telas e integração de cobrança não fazem parte desta etapa.
 - [x] Marketplace: vitrine pública e painel do vendedor
 - [ ] Central de afiliados com 2 níveis (só vendas reais, carência 7 dias)
-- [ ] Cobrança — aguardando escolha do provedor de pagamento
+- [ ] Cobrança Marketplace Asaas — conectar conta de produção, configurar divisão entre T@arte/vendedor/afiliados, Pix/cartão/boleto e confirmação segura das vendas; depende da conexão e dos recebedores verificados
 - [ ] Planos com limites de IA
