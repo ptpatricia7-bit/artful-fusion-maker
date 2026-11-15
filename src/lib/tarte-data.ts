@@ -69,45 +69,18 @@ export const criadores: Criador[] = [
 
 export const planos = [
   {
-    nome: "Mensal",
-    preco: "R$ 25",
+    nome: "Plano único",
+    preco: "R$ 37",
     ciclo: "/mês",
-    destaque: false,
-    resumo: "Pra testar o método com tudo liberado.",
+    destaque: true,
+    resumo: "Tudo liberado em um só plano mensal.",
     itens: [
       "Ranking de TOP produtos do TikTok Shop BR",
-      "Vídeos virais com o produto por trás de cada um",
-      "Tendências 24h antes de saturar",
+      "Roteirizar Vídeos e Lives com IA",
+      "Estúdio Visual, vídeos com IA e gravador",
+      "Geradores de páginas, áudio, produto, banner, quiz e conversas",
       "Atualização diária dos dados",
-    ],
-  },
-  {
-    nome: "Trimestral",
-    preco: "R$ 97",
-    ciclo: "/3 meses",
-    destaque: true,
-    resumo: "O plano de quem vai postar todo dia.",
-    itens: [
-      "Tudo do plano Mensal",
-      "Roteirizar Vídeos com IA — gancho, corpo e CTA",
-      "Roteirizar Live com IA + teleprompter + PDF",
-      "Criadores e lojas que mais faturam no Brasil",
-      "Dados dos EUA pra antecipar a próxima onda",
-      "Acesso completo, sem limite de buscas",
-    ],
-  },
-  {
-    nome: "Anual",
-    preco: "R$ 698",
-    ciclo: "/ano",
-    destaque: false,
-    resumo: "Melhor custo por mês, tudo liberado.",
-    itens: [
-      "Tudo do plano Trimestral",
-      "Filtros por nicho, categoria, faturamento e período",
-      "Ranking por período real (não acumulado)",
-      "Exportação de listas em CSV",
-      "Prioridade em novos recursos",
+      "Cancele quando quiser",
     ],
   },
 ];
