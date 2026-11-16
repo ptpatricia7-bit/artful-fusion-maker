@@ -8,7 +8,7 @@ export function SiteFooter() {
           T<span className="text-gradient">@</span>arte
         </span>
         <p className="max-w-md text-[13px] text-muted-foreground">
-          Métricas reais do TikTok Shop Brasil e roteiros com IA. Os números exibidos são
+          Métricas de produtos em alta e roteiros com IA. Os números exibidos são
           demonstrativos.
         </p>
         <div className="flex gap-5 text-[13px] text-muted-foreground">

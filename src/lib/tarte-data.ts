@@ -68,7 +68,7 @@ export const criadores: Criador[] = [
 ];
 
 const beneficios = [
-  "Ranking de TOP produtos do TikTok Shop BR",
+  "Ranking de TOP produtos em alta",
   "Roteirizar Vídeos e Lives com IA",
   "Estúdio Visual, vídeos com IA e gravador",
   "Geradores de páginas, áudio, produto, banner, quiz e conversas",
@@ -85,7 +85,7 @@ export const planos = [
 export const faq = [
   {
     q: "O que exatamente é o T@arte?",
-    a: "É um painel do TikTok Shop Brasil com ferramentas de IA para criar roteiros, vídeos e imagens para redes sociais.",
+    a: "É um painel de produtos em alta com ferramentas de IA para criar roteiros, vídeos e imagens para redes sociais.",
   },
   {
     q: "Com que frequência os dados são atualizados?",

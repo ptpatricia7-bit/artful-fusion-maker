@@ -12,13 +12,13 @@ const painelImageUrl = `https://artful-fusion-maker.lovable.app${painelAsset.url
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "T@arte — Veja o que está em alta no TikTok Shop Brasil" },
+      { title: "T@arte — Veja o que está em alta no T@arte" },
       {
         name: "description",
         content:
-          "Descubra produtos em alta no TikTok Shop Brasil e crie roteiros e vídeos com IA para postar todo dia.",
+          "Descubra produtos em alta no T@arte e crie roteiros e vídeos com IA para postar todo dia.",
       },
-      { property: "og:title", content: "T@arte — o que está vendendo agora no TikTok Shop BR" },
+      { property: "og:title", content: "T@arte — o que está vendendo agora no T@arte" },
       {
         property: "og:description",
         content:

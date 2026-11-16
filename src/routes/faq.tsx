@@ -15,7 +15,7 @@ export const Route = createFileRoute("/faq")({
       { property: "og:title", content: "Perguntas frequentes — T@arte" },
       {
         property: "og:description",
-        content: "Tudo sobre o painel do TikTok Shop BR e os roteiros com IA do T@arte.",
+        content: "Tudo sobre o painel de produtos em alta e os roteiros com IA do T@arte.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
