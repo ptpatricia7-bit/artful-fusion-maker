@@ -121,7 +121,7 @@ function Home() {
           <div>
             <h1 className="mt-6 font-display text-4xl leading-[1.05] font-bold sm:text-5xl lg:text-6xl">
               Descubra os produtos que estão{" "}
-              <span className="text-gradient">em alta</span> no TikTok Shop
+              <span className="text-gradient">em alta</span> no T<span className="text-gradient">@</span>arte
             </h1>
             <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
               Pare de adivinhar. Veja o que está em alta e crie roteiros e vídeos com IA pra postar todo dia.
