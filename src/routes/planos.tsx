@@ -10,7 +10,7 @@ export const Route = createFileRoute("/planos")({
       {
         name: "description",
         content:
-          "Plano único de R$ 37/mês: libere o painel do TikTok Shop BR, os roteiros com IA.",
+          "Mensal R$ 37, Trimestral R$ 97 ou Anual R$ 698, todos com os mesmos benefícios: libere o painel do TikTok Shop BR, os roteiros com IA.",
       },
       { property: "og:title", content: "Planos e preços — T@arte" },
       {
@@ -32,14 +32,14 @@ function Planos() {
         <div className="mx-auto max-w-6xl px-5 text-center">
           <h1 className="font-display text-4xl font-bold">Escolha seu acesso</h1>
           <p className="mx-auto mt-4 max-w-xl text-[15px] text-muted-foreground">
-            O plano inclui os roteiros com IA e o painel diário do TikTok Shop
+            Todos os planos incluem os roteiros com IA e o painel diário do TikTok Shop
             Brasil. 7 dias de garantia com reembolso de 100%.
           </p>
         </div>
       </section>
 
       <section className="py-16">
-        <div className="mx-auto grid max-w-6xl gap-5 px-5 max-w-md">
+        <div className="mx-auto grid max-w-6xl gap-5 px-5 md:grid-cols-3">
           {planos.map((p) => (
             <div
               key={p.nome}

@@ -67,22 +67,19 @@ export const criadores: Criador[] = [
   { nome: "@tech.dolucas", seguidores: "530K", faturamento: 154200, nicho: "Eletrônicos", videos: 76 },
 ];
 
+const beneficios = [
+  "Ranking de TOP produtos do TikTok Shop BR",
+  "Roteirizar Vídeos e Lives com IA",
+  "Estúdio Visual, vídeos com IA e gravador",
+  "Geradores de páginas, áudio, produto, banner, quiz e conversas",
+  "Atualização diária dos dados",
+  "Cancele quando quiser",
+];
+
 export const planos = [
-  {
-    nome: "Plano único",
-    preco: "R$ 37",
-    ciclo: "/mês",
-    destaque: true,
-    resumo: "Tudo liberado em um só plano mensal.",
-    itens: [
-      "Ranking de TOP produtos do TikTok Shop BR",
-      "Roteirizar Vídeos e Lives com IA",
-      "Estúdio Visual, vídeos com IA e gravador",
-      "Geradores de páginas, áudio, produto, banner, quiz e conversas",
-      "Atualização diária dos dados",
-      "Cancele quando quiser",
-    ],
-  },
+  { nome: "Mensal", preco: "R$ 37", ciclo: "/mês", destaque: false, resumo: "Todos os benefícios, pagando mês a mês.", itens: beneficios },
+  { nome: "Trimestral", preco: "R$ 97", ciclo: "/3 meses", destaque: true, resumo: "Todos os benefícios, por 3 meses.", itens: beneficios },
+  { nome: "Anual", preco: "R$ 698", ciclo: "/ano", destaque: false, resumo: "Todos os benefícios, por 12 meses.", itens: beneficios },
 ];
 
 export const faq = [
