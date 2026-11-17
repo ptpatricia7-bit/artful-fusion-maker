@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Download, Copy, Sparkles, FileText, Volume2, Package, Image, ListChecks } from "lucide-react";
+import { Download, Copy, Sparkles, FileText, Volume2, Package, Image, ListChecks, Share2 } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AppNav } from "@/components/AppNav";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ export function GeneratorTool({ mode }: { mode: GeneratorMode }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shareHint, setShareHint] = useState("");
   const audioRef = useRef<string | null>(null);
   useEffect(() => () => { if (audioRef.current) URL.revokeObjectURL(audioRef.current); }, []);
   const Icon = { paginas: FileText, audio: Volume2, produto: Package, banner: Image, quiz: ListChecks }[mode];
@@ -47,13 +48,31 @@ export function GeneratorTool({ mode }: { mode: GeneratorMode }) {
     } catch (e) { setError(e instanceof Error ? e.message : "Não foi possível gerar agora."); }
     finally { setBusy(false); }
   };
+  const fileForShare = async () => {
+    const blob = mode === "audio" || mode === "banner" ? await (await fetch(result)).blob() : new Blob([result], { type: mode === "produto" ? "text/plain;charset=utf-8" : "text/html;charset=utf-8" });
+    const fallbackType = mode === "audio" ? "audio/wav" : mode === "banner" ? "image/png" : mode === "produto" ? "text/plain" : "text/html";
+    return new File([blob], `tarte-${mode}.${config.extension}`, { type: blob.type || fallbackType });
+  };
   const download = async () => {
     try {
-      const blob = mode === "audio" || mode === "banner" ? await (await fetch(result)).blob() : new Blob([result], { type: mode === "produto" ? "text/plain;charset=utf-8" : "text/html;charset=utf-8" });
-      const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
+      const url = URL.createObjectURL(await fileForShare()); const anchor = document.createElement("a");
       anchor.href = url; anchor.download = `tarte-${mode}.${config.extension}`; anchor.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch { setError("Não foi possível baixar o arquivo."); }
+  };
+  const share = async () => {
+    setShareHint("");
+    try {
+      const file = await fileForShare();
+      if (navigator.canShare?.({ files: [file] }) && navigator.share) {
+        await navigator.share({ files: [file], title: config.title, text: `Feito com T@arte — ${config.title}` });
+        return;
+      }
+      setShareHint("Este navegador não abre o menu de compartilhamento. Baixe o arquivo e envie pelo WhatsApp, e-mail ou redes sociais.");
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "AbortError") return;
+      setShareHint("Não foi possível compartilhar agora. Baixe o arquivo e envie manualmente.");
+    }
   };
   return <div className="min-h-screen"><SiteHeader /><AppNav /><main className="mx-auto max-w-6xl px-5 py-10">
     <div className="flex items-center gap-3"><Icon className="h-7 w-7 text-primary" /><h1 className="font-display text-3xl font-bold">{config.title}</h1></div>
@@ -66,8 +85,10 @@ export function GeneratorTool({ mode }: { mode: GeneratorMode }) {
         <Button type="submit" disabled={busy} className="w-full"><Sparkles />{busy ? "Gerando…" : "Gerar com IA"}</Button>
       </form>
       <section className="min-w-0 rounded-lg border border-border bg-card p-5" aria-busy={busy}>
-        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">{config.result}</h2>{result && <div className="flex gap-2">{mode === "produto" && <Button variant="ghost" size="sm" onClick={async () => { try { await navigator.clipboard.writeText(result); setCopied(true); } catch { setError("Não foi possível copiar."); } }}><Copy />{copied ? "Copiado" : "Copiar"}</Button>}<Button variant="outline" size="sm" onClick={download}><Download />Baixar {config.extension.toUpperCase()}</Button></div>}</div>
+        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">{config.result}</h2>{result && <div className="flex gap-2">{mode === "produto" && <Button variant="ghost" size="sm" onClick={async () => { try { await navigator.clipboard.writeText(result); setCopied(true); } catch { setError("Não foi possível copiar."); } }}><Copy />{copied ? "Copiado" : "Copiar"}</Button>}<Button variant="outline" size="sm" onClick={share}><Share2 />Compartilhar</Button><Button variant="outline" size="sm" onClick={download}><Download />Baixar {config.extension.toUpperCase()}</Button></div>}</div>
         {error && <p role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">{error}</p>}
+        {shareHint && <p className="mt-5 rounded-md border border-border bg-secondary/40 p-4 text-sm text-muted-foreground">{shareHint}</p>}
+        {(mode === "quiz" || mode === "paginas") && !busy && <p className="mt-4 text-xs text-muted-foreground">No celular, use <strong className="font-semibold text-foreground">Compartilhar</strong> para mandar o arquivo direto no WhatsApp. No computador, baixe e anexe onde quiser.</p>}
         {busy ? <div role="status" className="flex min-h-80 items-center justify-center gap-3 text-muted-foreground"><Sparkles className="animate-pulse text-primary" />Gerando…</div> : result ? <div className="mt-5">{mode === "audio" ? <audio src={result} controls className="w-full" /> : mode === "banner" ? <img src={result} alt="Banner gerado para a campanha" className="max-h-[600px] w-full rounded-md object-contain" /> : mode === "produto" ? <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-relaxed">{result}</pre> : <iframe title={config.result} srcDoc={result} sandbox={mode === "quiz" ? "allow-scripts" : ""} referrerPolicy="no-referrer" className="h-[600px] w-full rounded-md border border-border" />}</div> : !error && <div className="flex min-h-80 items-center justify-center"><Icon className="h-16 w-16 text-muted-foreground/30" /></div>}
       </section>
     </div>
