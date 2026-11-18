@@ -63,7 +63,8 @@ export const Route = createFileRoute("/api/public/cakto-webhook")({
         if (timestamp) {
           const ts = Number(timestamp);
           if (Number.isFinite(ts) && Math.abs(Date.now() / 1000 - ts) > 300) {
-            return new Response("Aviso expirado.", { status: 401 });
+            // Responde 200 sem processar, para a Cakto não bloquear o salvamento.
+            return Response.json({ ok: true });
           }
         }
 
@@ -71,7 +72,8 @@ export const Route = createFileRoute("/api/public/cakto-webhook")({
         try {
           payload = JSON.parse(rawBody) as Record<string, unknown>;
         } catch {
-          return new Response("Corpo inválido.", { status: 400 });
+          // Teste de conexão sem corpo JSON: confirma recebimento sem processar nada.
+          return Response.json({ ok: true });
         }
 
         let verified = false;
@@ -83,7 +85,12 @@ export const Route = createFileRoute("/api/public/cakto-webhook")({
         if (!verified && typeof payload["secret"] === "string") {
           verified = timingSafeEqual(payload["secret"] as string, secret);
         }
-        if (!verified) return new Response("Assinatura inválida.", { status: 401 });
+        if (!verified) {
+          // Avisos sem assinatura válida são ignorados (nada é gravado nem liberado),
+          // mas respondemos 200 para o teste de "Salvar" da Cakto não falhar.
+          console.warn("[cakto-webhook] aviso ignorado: assinatura não confere");
+          return Response.json({ ok: true });
+        }
 
         const event = String(payload["event"] ?? "desconhecido");
         const data = (payload["data"] ?? payload) as Record<string, unknown>;
