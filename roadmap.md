@@ -37,4 +37,4 @@
 - [ ] Planos com limites de IA
 
 - [ ] Liberar ferramentas só para quem comprar o plano (depende da cobrança real ativa)
-- [ ] Link público para compartilhar quiz
+- [x] Link público para compartilhar quiz

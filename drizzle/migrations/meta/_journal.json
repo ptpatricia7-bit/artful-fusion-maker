@@ -43,6 +43,13 @@
       "when": 1792374705938,
       "tag": "0005_restrict_foundation_write_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794961732200,
+      "tag": "0006_create_shared_quizzes",
+      "breakpoints": true
     }
   ]
 }

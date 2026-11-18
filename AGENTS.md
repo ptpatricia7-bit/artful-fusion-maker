@@ -29,6 +29,6 @@
 - Reserve fal.ai daily quota atomically through a service-role-only database RPC after validating the user, before contacting fal.ai; browser storage and concurrent requests must never bypass the cap. Read usage through owner-scoped RLS, and retain reservations after uncertain provider failures to prevent extra billable requests.
 
 ## Download generators
-- Keep download-only generators in a shared GeneratorTool with per-tool protected leaf routes; this preserves consistent controls without publishing generated content.
+- Keep generators in a shared GeneratorTool with per-tool protected leaf routes; only quizzes are publishable, served by id from a public route with a CSP sandbox so shared scripts cannot touch the app origin.
 - Deliver synthesized audio through an authenticated raw server route with the shared AI pause check; this keeps binary audio outside RPC serialization and prevents blocked charges.
 - Render conversation mockups locally and export the preview with an embedded simulation label; this keeps editable images usable without AI credits and prevents unlabeled fictitious evidence.

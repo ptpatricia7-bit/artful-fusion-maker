@@ -36,6 +36,7 @@ import { Route as AuthenticatedVenderRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
 import { Route as ApiAudioRouteImport } from './routes/api/audio'
 import { Route as ApiIndicaVizinhoRouteImport } from './routes/api/indica-vizinho'
+import { Route as ApiPublicQuizIdRouteImport } from './routes/api/public/quiz/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -172,6 +173,11 @@ const ApiIndicaVizinhoRoute = ApiIndicaVizinhoRouteImport.update({
   path: '/api/indica-vizinho',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicQuizIdRoute = ApiPublicQuizIdRouteImport.update({
+  id: '/api/public/quiz/$id',
+  path: '/api/public/quiz/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
   '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
+  '/api/public/quiz/$id': typeof ApiPublicQuizIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
   '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
+  '/api/public/quiz/$id': typeof ApiPublicQuizIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/_authenticated/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
   '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
+  '/api/public/quiz/$id': typeof ApiPublicQuizIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -288,6 +297,7 @@ export interface FileRouteTypes {
     | '/video'
     | '/api/audio'
     | '/api/indica-vizinho'
+    | '/api/public/quiz/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/video'
     | '/api/audio'
     | '/api/indica-vizinho'
+    | '/api/public/quiz/$id'
   id:
     | '__root__'
     | '/'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
     | '/_authenticated/video'
     | '/api/audio'
     | '/api/indica-vizinho'
+    | '/api/public/quiz/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -357,6 +369,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiAudioRoute: typeof ApiAudioRoute
   ApiIndicaVizinhoRoute: typeof ApiIndicaVizinhoRoute
+  ApiPublicQuizIdRoute: typeof ApiPublicQuizIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -550,6 +563,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiIndicaVizinhoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/quiz/$id': {
+      id: '/api/public/quiz/$id'
+      path: '/api/public/quiz/$id'
+      fullPath: '/api/public/quiz/$id'
+      preLoaderRoute: typeof ApiPublicQuizIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -608,6 +628,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ApiAudioRoute: ApiAudioRoute,
   ApiIndicaVizinhoRoute: ApiIndicaVizinhoRoute,
+  ApiPublicQuizIdRoute: ApiPublicQuizIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

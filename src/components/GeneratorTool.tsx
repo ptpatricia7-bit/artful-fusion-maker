@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Download, Copy, Sparkles, FileText, Volume2, Package, Image, ListChecks, Share2 } from "lucide-react";
+import { Download, Copy, Sparkles, FileText, Volume2, Package, Image, ListChecks, Share2, Link2 } from "lucide-react";
+import { criarLinkQuiz } from "@/lib/share-quiz.functions";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AppNav } from "@/components/AppNav";
 import { Button } from "@/components/ui/button";
@@ -21,12 +22,25 @@ export function GeneratorTool({ mode }: { mode: GeneratorMode }) {
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
   const [shareHint, setShareHint] = useState("");
+  const linkFn = useServerFn(criarLinkQuiz);
+  const [link, setLink] = useState("");
+  const [linkBusy, setLinkBusy] = useState(false);
+  const makeLink = async () => {
+    setLinkBusy(true); setError("");
+    try {
+      const r = await linkFn({ data: { html: result, titulo: prompt } });
+      if (!r.id) throw new Error(r.erro || "Não foi possível criar o link.");
+      const url = `${window.location.origin}/api/public/quiz/${r.id}`; setLink(url);
+      try { await navigator.clipboard.writeText(url); } catch { /* sem permissão */ }
+    } catch (e) { setError(e instanceof Error ? e.message : "Não foi possível criar o link."); }
+    finally { setLinkBusy(false); }
+  };
   const audioRef = useRef<string | null>(null);
   useEffect(() => () => { if (audioRef.current) URL.revokeObjectURL(audioRef.current); }, []);
   const Icon = { paginas: FileText, audio: Volume2, produto: Package, banner: Image, quiz: ListChecks }[mode];
   const generate = async () => {
     if (prompt.trim().length < 3) { setError("Preencha a descrição com pelo menos 3 caracteres."); return; }
-    setBusy(true); setError(""); setCopied(false); setResult("");
+    setBusy(true); setError(""); setCopied(false); setResult(""); setLink("");
     try {
       if (mode === "audio") {
         const { data } = await supabase.auth.getSession();
@@ -85,8 +99,9 @@ export function GeneratorTool({ mode }: { mode: GeneratorMode }) {
         <Button type="submit" disabled={busy} className="w-full"><Sparkles />{busy ? "Gerando…" : "Gerar com IA"}</Button>
       </form>
       <section className="min-w-0 rounded-lg border border-border bg-card p-5" aria-busy={busy}>
-        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">{config.result}</h2>{result && <div className="flex gap-2">{mode === "produto" && <Button variant="ghost" size="sm" onClick={async () => { try { await navigator.clipboard.writeText(result); setCopied(true); } catch { setError("Não foi possível copiar."); } }}><Copy />{copied ? "Copiado" : "Copiar"}</Button>}<Button variant="outline" size="sm" onClick={share}><Share2 />Compartilhar</Button><Button variant="outline" size="sm" onClick={download}><Download />Baixar {config.extension.toUpperCase()}</Button></div>}</div>
+        <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">{config.result}</h2>{result && <div className="flex gap-2">{mode === "produto" && <Button variant="ghost" size="sm" onClick={async () => { try { await navigator.clipboard.writeText(result); setCopied(true); } catch { setError("Não foi possível copiar."); } }}><Copy />{copied ? "Copiado" : "Copiar"}</Button>}{mode === "quiz" && <Button size="sm" onClick={makeLink} disabled={linkBusy}><Link2 />{linkBusy ? "Criando…" : "Criar link"}</Button>}<Button variant="outline" size="sm" onClick={share}><Share2 />Compartilhar</Button><Button variant="outline" size="sm" onClick={download}><Download />Baixar {config.extension.toUpperCase()}</Button></div>}</div>
         {error && <p role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">{error}</p>}
+        {link && <div className="mt-5 space-y-3 rounded-md border border-primary/40 bg-primary/10 p-4 text-sm"><p className="font-semibold">Link pronto (já copiado):</p><input readOnly value={link} onFocus={(e) => e.target.select()} className="w-full rounded-md border border-input bg-background p-2 text-foreground" /><div className="flex flex-wrap gap-2"><Button size="sm" variant="outline" onClick={() => navigator.clipboard.writeText(link)}><Copy />Copiar link</Button><Button size="sm" asChild><a href={`https://wa.me/?text=${encodeURIComponent(`Faça esse quiz: ${link}`)}`} target="_blank" rel="noreferrer"><Share2 />Enviar no WhatsApp</a></Button></div></div>}
         {shareHint && <p className="mt-5 rounded-md border border-border bg-secondary/40 p-4 text-sm text-muted-foreground">{shareHint}</p>}
         {(mode === "quiz" || mode === "paginas") && !busy && <p className="mt-4 text-xs text-muted-foreground">No celular, use <strong className="font-semibold text-foreground">Compartilhar</strong> para mandar o arquivo direto no WhatsApp. No computador, baixe e anexe onde quiser.</p>}
         {busy ? <div role="status" className="flex min-h-80 items-center justify-center gap-3 text-muted-foreground"><Sparkles className="animate-pulse text-primary" />Gerando…</div> : result ? <div className="mt-5">{mode === "audio" ? <audio src={result} controls className="w-full" /> : mode === "banner" ? <img src={result} alt="Banner gerado para a campanha" className="max-h-[600px] w-full rounded-md object-contain" /> : mode === "produto" ? <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-relaxed">{result}</pre> : <iframe title={config.result} srcDoc={result} sandbox={mode === "quiz" ? "allow-scripts" : ""} referrerPolicy="no-referrer" className="h-[600px] w-full rounded-md border border-border" />}</div> : !error && <div className="flex min-h-80 items-center justify-center"><Icon className="h-16 w-16 text-muted-foreground/30" /></div>}

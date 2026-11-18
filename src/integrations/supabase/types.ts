@@ -248,6 +248,30 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_quizzes: {
+        Row: {
+          created_at: string
+          html: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          html: string
+          id?: string
+          title?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          html?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subscription_plans: {
         Row: {
           active: boolean
@@ -390,6 +414,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_shared_quiz: { Args: { _id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
