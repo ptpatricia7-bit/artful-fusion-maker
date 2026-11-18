@@ -38,3 +38,4 @@
 
 - [ ] Liberar ferramentas só para quem comprar o plano (depende da cobrança real ativa)
 - [x] Link público para compartilhar quiz
+- [x] Link do T@arte para colar na Cakto (página de vendas e redirecionamento)
