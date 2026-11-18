@@ -66,6 +66,16 @@ function Planos() {
                   </li>
                 ))}
               </ul>
+              {"checkout" in p && p.checkout ? (
+                <a href={p.checkout} target="_blank" rel="noopener noreferrer" className={`mt-7 rounded-full py-3 text-center text-sm font-semibold ${
+                  p.destaque
+                    ? "bg-gradient-neon text-primary-foreground"
+                    : "border border-border text-foreground"
+                }`}
+>
+                  Garantir acesso
+                </a>
+              ) : (
               <Link
                 to="/entrar"
                 className={`mt-7 rounded-full py-3 text-center text-sm font-semibold ${
@@ -76,6 +86,7 @@ function Planos() {
               >
                 Garantir acesso
               </Link>
+              )}
             </div>
           ))}
         </div>
