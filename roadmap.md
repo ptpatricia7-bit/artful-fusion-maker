@@ -35,3 +35,6 @@
 - [ ] Central de afiliados com 2 níveis (só vendas reais, carência 7 dias)
 - [ ] Cobrança Marketplace Asaas — conectar conta de produção, configurar divisão entre T@arte/vendedor/afiliados, Pix/cartão/boleto e confirmação segura das vendas; depende da conexão e dos recebedores verificados
 - [ ] Planos com limites de IA
+
+- [ ] Liberar ferramentas só para quem comprar o plano (depende da cobrança real ativa)
+- [ ] Link público para compartilhar quiz
