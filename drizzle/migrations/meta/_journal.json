@@ -57,6 +57,13 @@
       "when": 1794973581855,
       "tag": "0007_create_cakto_events",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794976572855,
+      "tag": "0008_restrict_commission_settings_read",
+      "breakpoints": true
     }
   ]
 }

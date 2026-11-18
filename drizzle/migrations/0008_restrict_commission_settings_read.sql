@@ -1,0 +1,2 @@
+DROP POLICY IF EXISTS "Signed in users read commission rules" ON public.commission_settings;
+CREATE POLICY "Admins read commission rules" ON public.commission_settings FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'::public.app_role));
