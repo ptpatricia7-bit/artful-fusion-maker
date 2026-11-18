@@ -64,6 +64,13 @@
       "when": 1794976572855,
       "tag": "0008_restrict_commission_settings_read",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794983307467,
+      "tag": "0009_create_payment_settings",
+      "breakpoints": true
     }
   ]
 }

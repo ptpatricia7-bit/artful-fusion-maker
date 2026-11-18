@@ -269,6 +269,30 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_settings: {
+        Row: {
+          id: number
+          pix_holder: string | null
+          pix_key: string | null
+          updated_at: string
+          whatsapp: string | null
+        }
+        Insert: {
+          id?: number
+          pix_holder?: string | null
+          pix_key?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Update: {
+          id?: number
+          pix_holder?: string | null
+          pix_key?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
