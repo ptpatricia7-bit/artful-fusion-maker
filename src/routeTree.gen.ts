@@ -36,6 +36,7 @@ import { Route as AuthenticatedVenderRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedVideoRouteImport } from './routes/_authenticated/video'
 import { Route as ApiAudioRouteImport } from './routes/api/audio'
 import { Route as ApiIndicaVizinhoRouteImport } from './routes/api/indica-vizinho'
+import { Route as ApiPublicCaktoWebhookRouteImport } from './routes/api/public/cakto-webhook'
 import { Route as ApiPublicQuizIdRouteImport } from './routes/api/public/quiz/$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -173,6 +174,11 @@ const ApiIndicaVizinhoRoute = ApiIndicaVizinhoRouteImport.update({
   path: '/api/indica-vizinho',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCaktoWebhookRoute = ApiPublicCaktoWebhookRouteImport.update({
+  id: '/api/public/cakto-webhook',
+  path: '/api/public/cakto-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicQuizIdRoute = ApiPublicQuizIdRouteImport.update({
   id: '/api/public/quiz/$id',
   path: '/api/public/quiz/$id',
@@ -206,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
   '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
+  '/api/public/cakto-webhook': typeof ApiPublicCaktoWebhookRoute
   '/api/public/quiz/$id': typeof ApiPublicQuizIdRoute
 }
 export interface FileRoutesByTo {
@@ -235,6 +242,7 @@ export interface FileRoutesByTo {
   '/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
   '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
+  '/api/public/cakto-webhook': typeof ApiPublicCaktoWebhookRoute
   '/api/public/quiz/$id': typeof ApiPublicQuizIdRoute
 }
 export interface FileRoutesById {
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/_authenticated/video': typeof AuthenticatedVideoRoute
   '/api/audio': typeof ApiAudioRoute
   '/api/indica-vizinho': typeof ApiIndicaVizinhoRoute
+  '/api/public/cakto-webhook': typeof ApiPublicCaktoWebhookRoute
   '/api/public/quiz/$id': typeof ApiPublicQuizIdRoute
 }
 export interface FileRouteTypes {
@@ -297,6 +306,7 @@ export interface FileRouteTypes {
     | '/video'
     | '/api/audio'
     | '/api/indica-vizinho'
+    | '/api/public/cakto-webhook'
     | '/api/public/quiz/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/video'
     | '/api/audio'
     | '/api/indica-vizinho'
+    | '/api/public/cakto-webhook'
     | '/api/public/quiz/$id'
   id:
     | '__root__'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/_authenticated/video'
     | '/api/audio'
     | '/api/indica-vizinho'
+    | '/api/public/cakto-webhook'
     | '/api/public/quiz/$id'
   fileRoutesById: FileRoutesById
 }
@@ -369,6 +381,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiAudioRoute: typeof ApiAudioRoute
   ApiIndicaVizinhoRoute: typeof ApiIndicaVizinhoRoute
+  ApiPublicCaktoWebhookRoute: typeof ApiPublicCaktoWebhookRoute
   ApiPublicQuizIdRoute: typeof ApiPublicQuizIdRoute
 }
 
@@ -563,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiIndicaVizinhoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cakto-webhook': {
+      id: '/api/public/cakto-webhook'
+      path: '/api/public/cakto-webhook'
+      fullPath: '/api/public/cakto-webhook'
+      preLoaderRoute: typeof ApiPublicCaktoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/quiz/$id': {
       id: '/api/public/quiz/$id'
       path: '/api/public/quiz/$id'
@@ -628,6 +648,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ApiAudioRoute: ApiAudioRoute,
   ApiIndicaVizinhoRoute: ApiIndicaVizinhoRoute,
+  ApiPublicCaktoWebhookRoute: ApiPublicCaktoWebhookRoute,
   ApiPublicQuizIdRoute: ApiPublicQuizIdRoute,
 }
 export const routeTree = rootRouteImport

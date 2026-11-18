@@ -95,6 +95,48 @@ export type Database = {
         }
         Relationships: []
       }
+      cakto_events: {
+        Row: {
+          amount_cents: number | null
+          customer_email: string | null
+          event: string
+          id: string
+          payload: Json
+          payment_method: string | null
+          processed: boolean
+          product_id: string | null
+          product_name: string | null
+          provider_order_id: string | null
+          received_at: string
+        }
+        Insert: {
+          amount_cents?: number | null
+          customer_email?: string | null
+          event: string
+          id?: string
+          payload?: Json
+          payment_method?: string | null
+          processed?: boolean
+          product_id?: string | null
+          product_name?: string | null
+          provider_order_id?: string | null
+          received_at?: string
+        }
+        Update: {
+          amount_cents?: number | null
+          customer_email?: string | null
+          event?: string
+          id?: string
+          payload?: Json
+          payment_method?: string | null
+          processed?: boolean
+          product_id?: string | null
+          product_name?: string | null
+          provider_order_id?: string | null
+          received_at?: string
+        }
+        Relationships: []
+      }
       commission_settings: {
         Row: {
           enabled: boolean
