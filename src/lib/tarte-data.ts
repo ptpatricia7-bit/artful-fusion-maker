@@ -79,7 +79,7 @@ const beneficios = [
 export const planos = [
   { nome: "Mensal", preco: "R$ 37", ciclo: "/mês", destaque: false, checkout: "https://pay.cakto.com.br/4ymqp6g_1325875", resumo: "Todos os benefícios, pagando mês a mês.", itens: beneficios },
   { nome: "Trimestral", preco: "R$ 97", ciclo: "/3 meses", destaque: true, resumo: "Todos os benefícios, por 3 meses.", itens: beneficios },
-  { nome: "Anual", preco: "R$ 698", ciclo: "/ano", destaque: false, resumo: "Todos os benefícios, por 12 meses.", itens: beneficios },
+  { nome: "Anual", preco: "R$ 698", ciclo: "/ano", destaque: false, checkout: "https://pay.cakto.com.br/7acds8w_1339007", resumo: "Todos os benefícios, por 12 meses.", itens: beneficios },
 ];
 
 export const faq = [
